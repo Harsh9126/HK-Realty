@@ -1,0 +1,3 @@
+@echo off
+echo Opening HK Realty Admin Dashboard...
+start http://localhost:3000/admin
