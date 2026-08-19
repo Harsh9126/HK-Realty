@@ -328,20 +328,12 @@ export default function AboutPage() {
             {coreValues.map((val) => (
               <div
                 key={val.title}
+                className="card-hover-value"
                 style={{
                   background: '#f8f9fa',
                   borderRadius: 16,
                   padding: 32,
                   border: '1px solid #eee',
-                  transition: 'all 0.3s ease',
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 32px rgba(26,60,94,0.12)';
-                  (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-4px)';
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLDivElement).style.boxShadow = 'none';
-                  (e.currentTarget as HTMLDivElement).style.transform = 'none';
                 }}
               >
                 <div style={{ fontSize: 36, marginBottom: 16 }}>{val.icon}</div>

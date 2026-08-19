@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
@@ -17,7 +17,7 @@ interface UserItem {
   phone?: string;
 }
 
-export default function AdminUsersPage() {
+function AdminUsersContent() {
   const searchParams = useSearchParams();
   const initialTab = searchParams.get('tab') === 'admins' ? 'admins' : 'users';
 
@@ -473,6 +473,14 @@ export default function AdminUsersPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AdminUsersPage() {
+  return (
+    <Suspense fallback={<div style={{ padding: '80px 24px', textAlign: 'center', color: 'var(--text-light)' }}>Loading users...</div>}>
+      <AdminUsersContent />
+    </Suspense>
   );
 }
 

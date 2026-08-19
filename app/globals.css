@@ -327,6 +327,15 @@ input, textarea, select {
   box-shadow: var(--shadow-xl), 0 0 0 2px rgba(212, 175, 55, 0.3);
 }
 
+.card-hover-value {
+  transition: all 0.3s ease;
+}
+
+.card-hover-value:hover {
+  box-shadow: 0 8px 32px rgba(26, 60, 94, 0.12);
+  transform: translateY(-4px);
+}
+
 /* ============================================================
    BADGES
    ============================================================ */
