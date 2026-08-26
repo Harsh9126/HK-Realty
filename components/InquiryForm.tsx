@@ -84,7 +84,7 @@ export default function InquiryForm({ propertyId, propertyTitle, compact = false
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <div style={{ display: 'grid', gridTemplateColumns: compact ? '1fr' : '1fr 1fr', gap: '16px' }}>
+      <div className={compact ? "" : "grid-2"} style={{ display: 'grid', gridTemplateColumns: compact ? '1fr' : undefined, gap: '16px' }}>
         <div className="form-group">
           <label className="form-label" htmlFor="inquiry-name">Full Name *</label>
           <input

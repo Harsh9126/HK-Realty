@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'About Us',
-  description: 'About HK Realty - building trust since 2012.',
+  description: 'About HK Realty - building trust since 2026.',
 };
 
 const teamMembers = [
@@ -85,44 +85,14 @@ const coreValues = [
 
 const timeline = [
   {
-    year: '2012',
+    year: '2026',
     title: 'Founded in Mumbai',
     desc: 'HK Realty was established with a vision to bring transparency and trust to Indian real estate.',
   },
   {
-    year: '2014',
-    title: 'First 100 Clients',
-    desc: 'Crossed 100 satisfied clients with a 98% referral rate within the first two years of operation.',
-  },
-  {
-    year: '2016',
-    title: 'Pan-India Expansion',
-    desc: 'Expanded operations to Pune, Hyderabad, and Bengaluru, bringing our expertise to more cities.',
-  },
-  {
-    year: '2018',
-    title: 'Commercial Division Launch',
-    desc: 'Launched a dedicated commercial real estate division to serve business and investment clients.',
-  },
-  {
-    year: '2020',
-    title: 'Digital Transformation',
-    desc: 'Launched our digital platform enabling virtual tours, online inquiries, and remote closings.',
-  },
-  {
-    year: '2022',
-    title: '₹500 Cr+ Transactions',
-    desc: 'Crossed ₹500 crore in total property transactions, marking a decade of trust and excellence.',
-  },
-  {
-    year: '2024',
-    title: 'Award-Winning Agency',
-    desc: 'Recognized as one of the Top 10 Real Estate Agencies in Western India by the Realty Awards.',
-  },
-  {
-    year: '2025',
-    title: 'HK Realty 2.0',
-    desc: 'Launched our new platform with AI-powered property matching and investment analytics.',
+    year: '2026',
+    title: 'First 5 Customers',
+    desc: 'Crossed 5 satisfied customers within our first year of operation.',
   },
 ];
 
@@ -177,8 +147,8 @@ export default function AboutPage() {
               margin: '0 auto 40px',
             }}
           >
-            Building trust, delivering dreams, and creating lasting value in Indian real estate since 2012.
-            Over a decade of excellence, transparency, and client-first service.
+            Building trust, delivering dreams, and creating lasting value in Indian real estate since 2026.
+            Committed to excellence, transparency, and client-first service.
           </p>
           <div
             style={{
@@ -189,10 +159,10 @@ export default function AboutPage() {
             }}
           >
             {[
-              { value: '13+', label: 'Years of Trust' },
-              { value: '2500+', label: 'Happy Clients' },
-              { value: '₹500Cr+', label: 'Transactions' },
-              { value: '8', label: 'Cities' },
+              { value: '5+', label: 'Projects' },
+              { value: '5+', label: 'Happy Customers' },
+              { value: '₹2Cr+', label: 'Transactions' },
+              { value: '2+', label: 'Cities Covered' },
             ].map((stat) => (
               <div key={stat.label} style={{ textAlign: 'center' }}>
                 <div style={{ fontSize: 32, fontWeight: 800, color: '#D4AF37' }}>{stat.value}</div>

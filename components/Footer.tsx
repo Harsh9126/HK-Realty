@@ -37,7 +37,7 @@ export default function Footer() {
     <footer style={{ background: 'var(--primary)', color: 'rgba(255,255,255,0.85)' }}>
       {/* Main Footer */}
       <div className="container" style={{ padding: '80px 24px 48px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr', gap: '48px' }}>
+        <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr', gap: '48px' }}>
           {/* Brand Column */}
           <div>
             <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', marginBottom: '20px' }}>
@@ -244,6 +244,9 @@ export default function Footer() {
         }
         @media (max-width: 768px) {
           .footer-grid { grid-template-columns: 1fr 1fr !important; }
+        }
+        @media (max-width: 480px) {
+          .footer-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </footer>

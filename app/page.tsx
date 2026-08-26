@@ -259,7 +259,7 @@ export default function HomePage() {
         </div>
 
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'center' }}>
+          <div className="grid-2" style={{ gap: '64px', alignItems: 'center' }}>
             {/* Left Content */}
             <div>
               <div style={{
@@ -308,9 +308,9 @@ export default function HomePage() {
               {/* Quick Stats */}
               <div style={{ display: 'flex', gap: '32px', flexWrap: 'wrap' }}>
                 {[
-                  { value: '500+', label: 'Properties Sold' },
-                  { value: '12+', label: 'Years Experience' },
-                  { value: '2000+', label: 'Happy Clients' },
+                  { value: '5+', label: 'Projects' },
+                  { value: '5+', label: 'Projects Sold' },
+                  { value: '5+', label: 'Happy Customers' },
                 ].map((stat) => (
                   <div key={stat.label}>
                     <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem', fontWeight: '700', color: 'var(--secondary)' }}>
@@ -358,11 +358,11 @@ export default function HomePage() {
           ============================ */}
       <section style={{ background: 'var(--primary)', padding: '60px 0' }}>
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '32px' }}>
-            <StatCounter value={500} suffix="+" label="Properties Sold" />
-            <StatCounter value={2000} suffix="+" label="Happy Clients" />
-            <StatCounter value={12} suffix="+" label="Years of Experience" />
-            <StatCounter value={15} suffix="+" label="Cities Covered" />
+          <div className="grid-4" style={{ gap: '32px' }}>
+            <StatCounter value={5} suffix="+" label="Projects" />
+            <StatCounter value={5} suffix="+" label="Projects Sold" />
+            <StatCounter value={5} suffix="+" label="Happy Customers" />
+            <StatCounter value={2} suffix="+" label="Cities Covered" />
           </div>
         </div>
       </section>
@@ -381,7 +381,7 @@ export default function HomePage() {
             <div className="divider" />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
+          <div className="grid-2" style={{ gap: '32px' }}>
             {/* Property Dealer Services */}
             <div className="card-premium" style={{ padding: '40px' }}>
               <div style={{
@@ -396,7 +396,7 @@ export default function HomePage() {
               <p style={{ color: 'var(--text-light)', marginBottom: '24px', lineHeight: '1.7' }}>
                 Expert guidance for buying, selling, and renting residential, commercial, and industrial properties.
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <div className="grid-2" style={{ gap: '10px' }}>
                 {['Residential Sales', 'Commercial Sales', 'Rental Services', 'Investment Consulting', 'Land Acquisition', 'Property Valuation', 'Documentation Help', 'Home Loan Assistance'].map((s) => (
                   <div key={s} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--text)' }}>
                     <span style={{ color: 'var(--secondary)', fontWeight: '700', flexShrink: 0 }}>✦</span>
@@ -423,7 +423,7 @@ export default function HomePage() {
               <p style={{ color: 'var(--text-light)', marginBottom: '24px', lineHeight: '1.7' }}>
                 We develop modern residential and commercial projects that create landmarks and deliver exceptional returns.
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <div className="grid-2" style={{ gap: '10px' }}>
                 {['Residential Townships', 'Luxury Villas', 'Apartment Projects', 'Commercial Complexes', 'Mixed-Use Developments', 'Industrial Parks', 'Smart City Projects', 'Infrastructure Development'].map((s) => (
                   <div key={s} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'var(--text)' }}>
                     <span style={{ color: 'var(--secondary)', fontWeight: '700', flexShrink: 0 }}>✦</span>
@@ -686,7 +686,7 @@ export default function HomePage() {
       }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'center' }}>
+          <div className="grid-2" style={{ gap: '64px', alignItems: 'center' }}>
             {/* Left */}
             <div>
               <span style={{ fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--secondary)', fontWeight: '700', marginBottom: '16px', display: 'block' }}>
