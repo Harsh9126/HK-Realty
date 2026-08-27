@@ -91,6 +91,7 @@ function CompareContent() {
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
