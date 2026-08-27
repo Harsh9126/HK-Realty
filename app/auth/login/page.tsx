@@ -2,23 +2,31 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { loginWithEmail, loginWithGoogle } from '@/lib/auth';
-
-const ADMIN_EMAIL = 'mrharsh818206@gmail.com';
+import { useRouter } from 'next/navigation';
+import { loginWithEmail, loginWithGoogle, isUserAdmin } from '@/lib/auth';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const redirectAfterAuth = (userEmail?: string | null) => {
+    if (userEmail && isUserAdmin(userEmail)) {
+      router.push('/admin');
+    } else {
+      router.push('/');
+    }
+  };
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     try {
-      await loginWithEmail(email, password);
-      window.location.href = '/';
+      const result = await loginWithEmail(email, password);
+      redirectAfterAuth(result.user?.email);
     } catch (err: any) {
       setError(err.message || 'Failed to login');
       setLoading(false);
@@ -29,8 +37,8 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
     try {
-      await loginWithGoogle();
-      window.location.href = '/';
+      const result = await loginWithGoogle();
+      redirectAfterAuth(result.user?.email);
     } catch (err: any) {
       setError(err.message || 'Failed to login with Google');
       setLoading(false);

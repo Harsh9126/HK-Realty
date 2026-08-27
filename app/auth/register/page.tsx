@@ -2,17 +2,25 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { registerWithEmail, loginWithGoogle } from '@/lib/auth';
-
-const ADMIN_EMAIL = 'mrharsh818206@gmail.com';
+import { useRouter } from 'next/navigation';
+import { registerWithEmail, loginWithGoogle, isUserAdmin } from '@/lib/auth';
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const redirectAfterAuth = (userEmail?: string | null) => {
+    if (userEmail && isUserAdmin(userEmail)) {
+      router.push('/admin');
+    } else {
+      router.push('/');
+    }
+  };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,22 +35,22 @@ export default function RegisterPage() {
     setLoading(true);
     setError('');
     try {
-      await registerWithEmail(email, password, name);
-      window.location.href = '/';
+      const result = await registerWithEmail(email, password, name);
+      redirectAfterAuth(result.user?.email);
     } catch (err: any) {
       setError(err.message || 'Failed to register');
       setLoading(false);
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleSignup = async () => {
     setLoading(true);
     setError('');
     try {
-      await loginWithGoogle();
-      window.location.href = '/';
+      const result = await loginWithGoogle();
+      redirectAfterAuth(result.user?.email);
     } catch (err: any) {
-      setError(err.message || 'Failed to register with Google');
+      setError(err.message || 'Failed to sign up with Google');
       setLoading(false);
     }
   };
@@ -59,7 +67,7 @@ export default function RegisterPage() {
         </div>
 
         <button 
-          onClick={handleGoogleLogin} 
+          onClick={handleGoogleSignup} 
           disabled={loading}
           className="btn btn-outline-dark" 
           style={{ width: '100%', justifyContent: 'center', marginBottom: '24px', background: '#fff' }}
