@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Property } from '@/data/sampleProperties';
+import { Property, sampleProperties } from '@/data/sampleProperties';
 import { useState, useEffect, useRef } from 'react';
 import { getProperties, deleteProperty, updateProperty } from '@/lib/firestore';
 import MobileSectionNav from '@/components/MobileSectionNav';
@@ -17,8 +17,9 @@ const adminNavItems = [
 
 export default function AdminPropertiesPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [properties, setProperties] = useState<Property[]>([]);
-  const [loading, setLoading] = useState(true);
+  // ⚡ Pre-populate with sample data so list is visible instantly
+  const [properties, setProperties] = useState<Property[]>(sampleProperties as Property[]);
+  const [syncing, setSyncing] = useState(true);
   const [editingProp, setEditingProp] = useState<Property | null>(null);
 
   // Image upload state for edit modal
@@ -29,14 +30,14 @@ export default function AdminPropertiesPage() {
   const [editUploadProgress, setEditUploadProgress] = useState(0);
 
   const fetchPropertiesData = async () => {
-    setLoading(true);
+    setSyncing(true);
     try {
       const data = await getProperties();
       setProperties(data as Property[]);
     } catch (err) {
       console.error('Failed to fetch properties:', err);
     } finally {
-      setLoading(false);
+      setSyncing(false);
     }
   };
 
@@ -180,7 +181,13 @@ export default function AdminPropertiesPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
               <div>
                 <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.5rem, 4vw, 2.2rem)', color: 'var(--primary)', marginBottom: '8px' }}>Manage Properties</h1>
-                <p style={{ color: 'var(--text-light)' }}>Total {properties.length} active listings</p>
+                <p style={{ color: 'var(--text-light)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  Total {properties.length} active listings
+                  {syncing && <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', color: 'var(--secondary)', background: 'rgba(194,161,71,0.15)', padding: '2px 8px', borderRadius: '20px', fontWeight: '600' }}>
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--secondary)', display: 'inline-block', animation: 'pulse 1.2s infinite' }} />
+                    Syncing
+                  </span>}
+                </p>
               </div>
               <Link href="/admin/properties/add" className="btn btn-primary">+ Add New Property</Link>
             </div>

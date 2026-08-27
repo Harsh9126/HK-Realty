@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Project } from '@/data/sampleProjects';
+import { Project, sampleProjects } from '@/data/sampleProjects';
 import { useState, useEffect, useRef } from 'react';
 import { getProjects, deleteProject, updateProject } from '@/lib/firestore';
 import MobileSectionNav from '@/components/MobileSectionNav';
@@ -17,8 +17,9 @@ const adminNavItems = [
 
 export default function AdminProjectsPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
+  // ⚡ Pre-populate with sample data so list is visible instantly
+  const [projects, setProjects] = useState<Project[]>(sampleProjects as Project[]);
+  const [syncing, setSyncing] = useState(true);
   const [editingProj, setEditingProj] = useState<Project | null>(null);
 
   // Image upload state for edit modal
@@ -29,14 +30,14 @@ export default function AdminProjectsPage() {
   const [editUploadProgress, setEditUploadProgress] = useState(0);
 
   const fetchProjectsData = async () => {
-    setLoading(true);
+    setSyncing(true);
     try {
       const data = await getProjects();
       setProjects(data as Project[]);
     } catch (err) {
       console.error('Failed to fetch projects:', err);
     } finally {
-      setLoading(false);
+      setSyncing(false);
     }
   };
 
@@ -180,7 +181,13 @@ export default function AdminProjectsPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
               <div>
                 <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.5rem, 4vw, 2.2rem)', color: 'var(--primary)', marginBottom: '8px' }}>Manage Projects</h1>
-                <p style={{ color: 'var(--text-light)' }}>Total {projects.length} projects</p>
+                <p style={{ color: 'var(--text-light)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  Total {projects.length} projects
+                  {syncing && <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', color: 'var(--secondary)', background: 'rgba(194,161,71,0.15)', padding: '2px 8px', borderRadius: '20px', fontWeight: '600' }}>
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--secondary)', display: 'inline-block', animation: 'pulse 1.2s infinite' }} />
+                    Syncing
+                  </span>}
+                </p>
               </div>
               <Link href="/admin/projects/add" className="btn btn-primary">+ Add New Project</Link>
             </div>
