@@ -38,7 +38,7 @@ With continued infrastructure development and proximity to Delhi, Gurugram offer
 With the Navi Mumbai International Airport nearing completion, real estate prices in Panvel, Ulwe, and Dronagiri are set for significant appreciation.
 
 Contact HK Realty today to explore curated investment opportunities in these high-growth markets.`,
-    author: 'Haroon Khan',
+    author: 'Harsh Kandhol',
     authorRole: 'Founder & CEO, HK Realty',
     category: 'Investment Insights',
     tags: ['Investment', 'India Real Estate', 'ROI', 'High Growth', '2025'],
@@ -111,7 +111,7 @@ Funds for purchase must come through normal banking channels (NRE/NRO accounts o
 With India's GDP growth at 6-7%, urban infrastructure expansion, and rental yields of 3-5%, Indian real estate offers compelling returns for NRI investors.
 
 HK Realty provides complete NRI investment support including virtual tours, power of attorney services, and end-to-end documentation.`,
-    author: 'Haroon Khan',
+    author: 'Harsh Kandhol',
     authorRole: 'Founder & CEO, HK Realty',
     category: 'NRI Investment',
     tags: ['NRI', 'Investment', 'FEMA', 'Tax', 'India Real Estate'],

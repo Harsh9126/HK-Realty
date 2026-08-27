@@ -7,7 +7,7 @@ export const metadata = {
 
 const teamMembers = [
   {
-    name: 'Harish Kumar',
+    name: 'Harsh Kandhol',
     role: 'Founder & CEO',
     experience: '20+ Years Experience',
     initials: 'HK',

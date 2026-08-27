@@ -195,7 +195,7 @@ export const getTestimonials = async () => {
 
 // Users Management
 export const defaultSampleUsers = [
-  { id: 'usr-1', uid: 'usr-1', name: 'Harsh Kumar', email: 'mrharsh818206@gmail.com', role: 'Admin', joinedDate: '2025-01-15', status: 'Active', phone: '+91-98765-00000', timestampMillis: new Date('2025-01-15').getTime() },
+  { id: 'usr-1', uid: 'usr-1', name: 'Harsh Kandhol', email: 'mrharsh818206@gmail.com', role: 'Admin', joinedDate: '2025-01-15', status: 'Active', phone: '+91-98765-00000', timestampMillis: new Date('2025-01-15').getTime() },
   { id: 'usr-2', uid: 'usr-2', name: 'Rajesh Kumar', email: 'rajesh@example.com', role: 'User', joinedDate: '2025-03-10', status: 'Active', phone: '+91-98765-12345', timestampMillis: new Date('2025-03-10').getTime() },
   { id: 'usr-3', uid: 'usr-3', name: 'Priya Sharma', email: 'priya@example.com', role: 'User', joinedDate: '2025-04-02', status: 'Active', phone: '+91-98765-23456', timestampMillis: new Date('2025-04-02').getTime() },
   { id: 'usr-4', uid: 'usr-4', name: 'Amit Patel', email: 'amit.patel@example.com', role: 'User', joinedDate: '2025-04-20', status: 'Active', phone: '+91-98765-34567', timestampMillis: new Date('2025-04-20').getTime() },
