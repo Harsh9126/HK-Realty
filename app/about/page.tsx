@@ -9,7 +9,7 @@ const teamMembers = [
   {
     name: 'Harsh Kandhol',
     role: 'Founder & CEO',
-    experience: '20+ Years Experience',
+    experience: '2 Years Experience',
     initials: 'HK',
     color: '#D4AF37',
   },
@@ -328,9 +328,10 @@ export default function AboutPage() {
               Milestones that define our story of growth and excellence
             </p>
           </div>
-          <div style={{ position: 'relative' }}>
+          <div className="timeline-container" style={{ position: 'relative' }}>
             {/* Center line */}
             <div
+              className="timeline-line"
               style={{
                 position: 'absolute',
                 left: '50%',
@@ -344,6 +345,7 @@ export default function AboutPage() {
             {timeline.map((item, idx) => (
               <div
                 key={item.year}
+                className={`timeline-item ${idx % 2 === 0 ? 'timeline-left' : 'timeline-right'}`}
                 style={{
                   display: 'flex',
                   justifyContent: idx % 2 === 0 ? 'flex-start' : 'flex-end',
@@ -353,6 +355,7 @@ export default function AboutPage() {
               >
                 {/* Dot */}
                 <div
+                  className="timeline-dot"
                   style={{
                     position: 'absolute',
                     left: '50%',
@@ -368,14 +371,13 @@ export default function AboutPage() {
                   }}
                 />
                 <div
+                  className="timeline-card"
                   style={{
                     width: '45%',
                     background: 'rgba(255,255,255,0.05)',
                     borderRadius: 12,
                     padding: 24,
                     border: '1px solid rgba(255,255,255,0.1)',
-                    marginLeft: idx % 2 === 0 ? 0 : undefined,
-                    marginRight: idx % 2 !== 0 ? 0 : undefined,
                   }}
                 >
                   <div

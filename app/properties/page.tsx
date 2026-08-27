@@ -57,15 +57,15 @@ export default function PropertiesPage() {
               placeholder="Search by city or locality..."
               value={location}
               onChange={e => setLocation(e.target.value)}
-              style={{ flex: '2 1 200px', padding: '12px 16px', borderRadius: '10px', border: 'none', background: 'rgba(255,255,255,0.95)', fontSize: '0.9rem', outline: 'none' }}
+              style={{ flex: '1 1 200px', padding: '12px 16px', borderRadius: '10px', border: 'none', background: 'rgba(255,255,255,0.95)', fontSize: '0.9rem', outline: 'none' }}
             />
             <select value={purpose} onChange={e => setPurpose(e.target.value)} style={{ flex: '1 1 120px', padding: '12px 16px', borderRadius: '10px', border: 'none', background: 'rgba(255,255,255,0.95)', fontSize: '0.9rem', outline: 'none' }}>
               {purposes.map(p => <option key={p} value={p}>{p === 'all' ? 'Any Purpose' : p.charAt(0).toUpperCase() + p.slice(1)}</option>)}
             </select>
-            <select value={type} onChange={e => setType(e.target.value)} style={{ flex: '1 1 140px', padding: '12px 16px', borderRadius: '10px', border: 'none', background: 'rgba(255,255,255,0.95)', fontSize: '0.9rem', outline: 'none' }}>
+            <select value={type} onChange={e => setType(e.target.value)} style={{ flex: '1 1 130px', padding: '12px 16px', borderRadius: '10px', border: 'none', background: 'rgba(255,255,255,0.95)', fontSize: '0.9rem', outline: 'none' }}>
               {types.map(t => <option key={t} value={t}>{t === 'all' ? 'Any Type' : t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
             </select>
-            <select value={budgetIdx} onChange={e => setBudgetIdx(Number(e.target.value))} style={{ flex: '1 1 140px', padding: '12px 16px', borderRadius: '10px', border: 'none', background: 'rgba(255,255,255,0.95)', fontSize: '0.9rem', outline: 'none' }}>
+            <select value={budgetIdx} onChange={e => setBudgetIdx(Number(e.target.value))} style={{ flex: '1 1 130px', padding: '12px 16px', borderRadius: '10px', border: 'none', background: 'rgba(255,255,255,0.95)', fontSize: '0.9rem', outline: 'none' }}>
               {budgets.map((b, i) => <option key={b.label} value={i}>{b.label}</option>)}
             </select>
           </div>
@@ -84,7 +84,7 @@ export default function PropertiesPage() {
               </select>
               <div style={{ display: 'flex', gap: '4px' }}>
                 {(['grid', 'list'] as const).map(mode => (
-                  <button key={mode} onClick={() => setViewMode(mode)} style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid #E5E7EB', background: viewMode === mode ? 'var(--primary)' : 'var(--accent)', color: viewMode === mode ? '#fff' : 'var(--text)', cursor: 'pointer', fontSize: '1rem' }}>
+                  <button key={mode} onClick={() => setViewMode(mode)} style={{ padding: '8px 12px', borderRadius: '8px', border: '1px solid #E5E7EB', background: viewMode === mode ? 'var(--primary)' : 'var(--accent)', color: viewMode === mode ? '#fff' : 'var(--text)', cursor: 'pointer', fontSize: '0.85rem' }}>
                     {mode === 'grid' ? 'Grid' : 'List'}
                   </button>
                 ))}
@@ -93,7 +93,7 @@ export default function PropertiesPage() {
           </div>
 
           {compareList.length > 0 && (
-            <div style={{ background: 'var(--primary)', borderRadius: '12px', padding: '16px 24px', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#fff' }}>
+            <div style={{ background: 'var(--primary)', borderRadius: '12px', padding: '16px 24px', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: '#fff', flexWrap: 'wrap', gap: '12px' }}>
               <span>{compareList.length} properties selected for comparison</span>
               <div style={{ display: 'flex', gap: '12px' }}>
                 <Link href={'/compare?ids=' + compareList.join(',')} className="btn btn-primary btn-sm">Compare Now</Link>

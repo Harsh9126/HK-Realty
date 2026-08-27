@@ -169,7 +169,7 @@ function HeroSearch() {
           value={location}
           onChange={(e) => setLocation(e.target.value)}
           style={{
-            flex: '2 1 200px',
+            flex: '1 1 200px',
             padding: '14px 18px',
             borderRadius: '12px',
             border: 'none',
@@ -205,7 +205,7 @@ function HeroSearch() {
         <Link
           href={`/properties?purpose=${purpose}&type=${type}&location=${location}`}
           className="btn btn-primary"
-          style={{ flex: '0 0 auto', borderRadius: '12px', padding: '14px 24px' }}
+          style={{ flex: '1 1 120px', minWidth: '120px', justifyContent: 'center', borderRadius: '12px', padding: '14px 24px' }}
         >
           Search
         </Link>
@@ -383,7 +383,7 @@ export default function HomePage() {
 
           <div className="grid-2" style={{ gap: '32px' }}>
             {/* Property Dealer Services */}
-            <div className="card-premium" style={{ padding: '40px' }}>
+            <div className="card-premium" style={{ padding: 'clamp(20px, 4vw, 40px)' }}>
               <div style={{
                 width: '64px', height: '64px', borderRadius: '16px',
                 background: 'var(--gradient-primary)',
@@ -410,7 +410,7 @@ export default function HomePage() {
             </div>
 
             {/* Development Services */}
-            <div className="card-premium" style={{ padding: '40px' }}>
+            <div className="card-premium" style={{ padding: 'clamp(20px, 4vw, 40px)' }}>
               <div style={{
                 width: '64px', height: '64px', borderRadius: '16px',
                 background: 'var(--gradient-gold)',

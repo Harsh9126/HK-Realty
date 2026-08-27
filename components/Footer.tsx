@@ -182,7 +182,7 @@ export default function Footer() {
               Get the latest property listings, market updates, and investment opportunities.
             </p>
           </div>
-          <div style={{ display: 'flex', gap: '12px', flex: '0 0 auto' }}>
+          <div style={{ display: 'flex', gap: '12px', flex: '1 1 300px', flexWrap: 'wrap' }}>
             <input
               type="email"
               placeholder="Enter your email"
@@ -193,7 +193,8 @@ export default function Footer() {
                 background: 'rgba(255,255,255,0.08)',
                 color: '#fff',
                 fontSize: '0.9rem',
-                width: '240px',
+                flex: '1 1 200px',
+                minWidth: '0',
                 outline: 'none',
               }}
             />

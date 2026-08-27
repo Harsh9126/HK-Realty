@@ -73,19 +73,19 @@ export default function ProjectDetailPage() {
       {/* Main */}
       <section className="section" style={{ paddingTop: '0' }}>
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '32px', marginTop: '-40px', position: 'relative', zIndex: 1, alignItems: 'start' }}>
+          <div className="detail-layout-grid">
             {/* Left */}
             <div>
               {/* Key Stats */}
               <div className="card" style={{ padding: '28px', marginBottom: '24px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
+                <div className="project-stats-grid">
                   {[
                     { label: 'Starting Price', value: formatPrice(project.startingPrice, project.priceUnit) },
                     { label: 'Total Units', value: String(project.totalUnits) },
                     { label: project.status === 'ongoing' ? 'Booked' : 'Delivered', value: `${soldPct}%` },
                     { label: 'City', value: project.city },
-                  ].map((item, i) => (
-                    <div key={item.label} style={{ textAlign: 'center', borderLeft: i > 0 ? '1px solid #E5E7EB' : 'none', paddingLeft: i > 0 ? '20px' : 0 }}>
+                  ].map((item) => (
+                    <div key={item.label} className="project-stat-item">
                       <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: '700', color: 'var(--primary)' }}>{item.value}</div>
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>{item.label}</div>
                     </div>
@@ -119,7 +119,7 @@ export default function ProjectDetailPage() {
                       <div className="progress-bar" style={{ height: '16px' }}>
                         <div className="progress-fill" style={{ width: `${project.progress}%` }} />
                       </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '12px', fontSize: '0.85rem', color: 'var(--text-muted)', flexWrap: 'wrap', gap: '8px' }}>
                         <span>Expected Completion: <strong style={{ color: 'var(--text)' }}>{project.expectedCompletion}</strong></span>
                         <span>{project.soldUnits} / {project.totalUnits} units booked</span>
                       </div>
@@ -128,7 +128,7 @@ export default function ProjectDetailPage() {
 
                   <div className="card" style={{ padding: '28px', marginBottom: '24px' }}>
                     <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', color: 'var(--primary)', marginBottom: '16px' }}>Project Highlights</h2>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '12px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '12px' }}>
                       {project.highlights.map(h => (
                         <div key={h} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '14px', background: 'rgba(212,175,55,0.06)', border: '1px solid rgba(212,175,55,0.2)', borderRadius: '12px', fontSize: '0.85rem', fontWeight: '500', color: 'var(--primary)' }}>
                           <span style={{ color: 'var(--secondary)', fontWeight: '700', flexShrink: 0 }}>✦</span> {h}
@@ -159,7 +159,7 @@ export default function ProjectDetailPage() {
             </div>
 
             {/* Sidebar */}
-            <div style={{ position: 'sticky', top: '100px' }}>
+            <div>
               <div className="card" style={{ padding: '24px', marginBottom: '20px' }}>
                 <h3 style={{ fontFamily: 'var(--font-display)', color: 'var(--primary)', marginBottom: '16px' }}>Project Info</h3>
                 {[
@@ -188,6 +188,54 @@ export default function ProjectDetailPage() {
           </div>
         </div>
       </section>
+
+      <style jsx>{`
+        .detail-layout-grid {
+          display: grid;
+          grid-template-columns: 1fr 380px;
+          gap: 32px;
+          margin-top: -40px;
+          position: relative;
+          z-index: 1;
+          align-items: start;
+        }
+        .project-stats-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
+        }
+        .project-stat-item {
+          text-align: center;
+          border-left: 1px solid #E5E7EB;
+          padding-left: 20px;
+        }
+        .project-stat-item:first-child {
+          border-left: none;
+          padding-left: 0;
+        }
+        @media (max-width: 1024px) {
+          .detail-layout-grid {
+            grid-template-columns: 1fr;
+            margin-top: 16px;
+          }
+        }
+        @media (max-width: 640px) {
+          .project-stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+          }
+          .project-stat-item {
+            border-left: none;
+            padding-left: 0;
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 8px;
+          }
+        }
+      `}</style>
+    </>
+  );
+}
     </>
   );
 }

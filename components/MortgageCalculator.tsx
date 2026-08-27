@@ -28,7 +28,7 @@ export default function MortgageCalculator() {
 
   return (
     <div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px', alignItems: 'start' }}>
+      <div className="calc-grid">
         {/* Controls */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
           {/* Loan Amount */}
@@ -47,7 +47,7 @@ export default function MortgageCalculator() {
               step={100000}
               value={loanAmount}
               onChange={(e) => setLoanAmount(Number(e.target.value))}
-              style={{ width: '100%', accentColor: 'var(--secondary)' }}
+              style={{ width: '100%', accentColor: 'var(--secondary)', height: '8px' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
               <span>₹5L</span><span>₹5 Cr</span>
@@ -70,7 +70,7 @@ export default function MortgageCalculator() {
               step={0.1}
               value={interestRate}
               onChange={(e) => setInterestRate(Number(e.target.value))}
-              style={{ width: '100%', accentColor: 'var(--secondary)' }}
+              style={{ width: '100%', accentColor: 'var(--secondary)', height: '8px' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
               <span>6%</span><span>20%</span>
@@ -93,7 +93,7 @@ export default function MortgageCalculator() {
               step={1}
               value={tenure}
               onChange={(e) => setTenure(Number(e.target.value))}
-              style={{ width: '100%', accentColor: 'var(--secondary)' }}
+              style={{ width: '100%', accentColor: 'var(--secondary)', height: '8px' }}
             />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
               <span>1 Year</span><span>30 Years</span>
@@ -107,7 +107,7 @@ export default function MortgageCalculator() {
           <div style={{
             background: 'var(--gradient-primary)',
             borderRadius: '20px',
-            padding: '32px',
+            padding: '32px 20px',
             textAlign: 'center',
             marginBottom: '20px',
             boxShadow: 'var(--shadow-lg)',
@@ -115,7 +115,7 @@ export default function MortgageCalculator() {
             <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>
               Monthly EMI
             </p>
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', fontWeight: '700', color: 'var(--secondary)', lineHeight: 1 }}>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 5vw, 2.5rem)', fontWeight: '700', color: 'var(--secondary)', lineHeight: 1 }}>
               {formatAmount(emi)}
             </div>
             <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', marginTop: '8px' }}>per month</p>
@@ -135,7 +135,7 @@ export default function MortgageCalculator() {
                 border: '1px solid #E5E7EB',
               }}>
                 <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '6px' }}>{item.label}</p>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: '700', color: item.color }}>{item.value}</p>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.05rem', fontWeight: '700', color: item.color }}>{item.value}</p>
               </div>
             ))}
             <div style={{
@@ -145,7 +145,7 @@ export default function MortgageCalculator() {
               border: '1px solid rgba(212,175,55,0.3)',
             }}>
               <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '6px' }}>Interest %</p>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: '700', color: 'var(--secondary)' }}>{interestPct}%</p>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.05rem', fontWeight: '700', color: 'var(--secondary)' }}>{interestPct}%</p>
             </div>
           </div>
 
@@ -166,6 +166,21 @@ export default function MortgageCalculator() {
           </a>
         </div>
       </div>
+
+      <style jsx>{`
+        .calc-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 40px;
+          align-items: start;
+        }
+        @media (max-width: 768px) {
+          .calc-grid {
+            grid-template-columns: 1fr;
+            gap: 28px;
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -39,7 +39,7 @@ export default function Navbar() {
         padding: '12px 0',
       }}>
         <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Link href="/admin" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
+          <Link href="/admin" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
             <div style={{
               width: '36px', height: '36px', background: 'var(--gradient-gold)',
               borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -49,7 +49,12 @@ export default function Navbar() {
               Admin Panel
             </span>
           </Link>
-          <NavAuthButtons />
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+            <Link href="/" style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.8)', textDecoration: 'none', padding: '6px 12px', borderRadius: '6px', background: 'rgba(255,255,255,0.1)' }}>
+              🌐 Main Site
+            </Link>
+            <NavAuthButtons />
+          </div>
         </div>
       </nav>
     );

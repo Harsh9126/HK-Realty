@@ -6,6 +6,16 @@ import { useSearchParams } from 'next/navigation';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { getUsers, updateUserStatus, deleteUserDoc, createAdminManually, defaultSampleUsers } from '@/lib/firestore';
+import MobileSectionNav from '@/components/MobileSectionNav';
+
+const adminNavItems = [
+  { href: '/admin', label: 'Dashboard', icon: '📊' },
+  { href: '/admin/properties', label: 'Properties', icon: '🏘️' },
+  { href: '/admin/projects', label: 'Projects', icon: '🏗️' },
+  { href: '/admin/inquiries', label: 'Inquiries', icon: '📨' },
+  { href: '/admin/users?tab=users', label: 'Users', icon: '👥' },
+  { href: '/admin/users?tab=admins', label: 'Admins', icon: '🛡️' },
+];
 
 interface UserItem {
   id: string;
@@ -125,232 +135,235 @@ function AdminUsersContent() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: 'calc(100vh - 80px)', background: 'var(--bg)', paddingTop: '80px' }}>
-      {/* Sidebar */}
-      <div style={{ width: '250px', background: 'var(--primary)', color: '#fff', padding: '24px', display: 'flex', flexDirection: 'column' }} className="hide-mobile">
-        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--secondary)', marginBottom: '32px' }}>HK Realty Admin</h2>
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <Link href="/admin" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>📊 Dashboard</Link>
-          <Link href="/admin/properties" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>🏘️ Properties</Link>
-          <Link href="/admin/projects" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>🏗️ Projects</Link>
-          <Link href="/admin/inquiries" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>📨 Inquiries</Link>
-          <button 
-            onClick={() => setActiveTab('users')}
-            style={{ 
-              padding: '12px 16px', 
-              background: activeTab === 'users' ? 'rgba(255,255,255,0.1)' : 'transparent', 
-              color: activeTab === 'users' ? '#fff' : 'rgba(255,255,255,0.7)', 
-              borderRadius: '8px', 
-              fontWeight: activeTab === 'users' ? '600' : '400',
-              border: 'none',
-              textAlign: 'left',
-              cursor: 'pointer',
-              fontSize: '1rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-          >
-            👥 Users ({regularUsers.length})
-          </button>
-          <button 
-            onClick={() => setActiveTab('admins')}
-            style={{ 
-              padding: '12px 16px', 
-              background: activeTab === 'admins' ? 'rgba(255,255,255,0.1)' : 'transparent', 
-              color: activeTab === 'admins' ? '#fff' : 'rgba(255,255,255,0.7)', 
-              borderRadius: '8px', 
-              fontWeight: activeTab === 'admins' ? '600' : '400',
-              border: 'none',
-              textAlign: 'left',
-              cursor: 'pointer',
-              fontSize: '1rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-          >
-            🛡️ Admins ({adminUsers.length})
-          </button>
-        </nav>
-      </div>
-
-      {/* Main Content */}
-      <div style={{ flex: 1, padding: '40px' }}>
-        <div className="container" style={{ maxWidth: '1200px', margin: '0' }}>
-          
-          {/* Tabs Selector */}
-          <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', borderBottom: '1px solid #E5E7EB', paddingBottom: '12px' }}>
-            <button
+    <div style={{ width: '100%' }}>
+      <MobileSectionNav title="Admin" items={adminNavItems} />
+      <div className="responsive-sidebar-container">
+        {/* Sidebar */}
+        <div style={{ width: '250px', background: 'var(--primary)', color: '#fff', padding: '24px', display: 'flex', flexDirection: 'column' }} className="hide-mobile">
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--secondary)', marginBottom: '32px' }}>HK Realty Admin</h2>
+          <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <Link href="/admin" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>📊 Dashboard</Link>
+            <Link href="/admin/properties" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>🏘️ Properties</Link>
+            <Link href="/admin/projects" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>🏗️ Projects</Link>
+            <Link href="/admin/inquiries" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>📨 Inquiries</Link>
+            <button 
               onClick={() => setActiveTab('users')}
-              style={{
-                padding: '10px 20px',
-                borderRadius: '10px',
+              style={{ 
+                padding: '12px 16px', 
+                background: activeTab === 'users' ? 'rgba(255,255,255,0.1)' : 'transparent', 
+                color: activeTab === 'users' ? '#fff' : 'rgba(255,255,255,0.7)', 
+                borderRadius: '8px', 
+                fontWeight: activeTab === 'users' ? '600' : '400',
                 border: 'none',
-                background: activeTab === 'users' ? 'var(--primary)' : '#fff',
-                color: activeTab === 'users' ? '#fff' : 'var(--text-light)',
-                fontWeight: '600',
+                textAlign: 'left',
                 cursor: 'pointer',
-                boxShadow: activeTab === 'users' ? '0 4px 6px -1px rgba(0,0,0,0.1)' : 'none',
-                transition: 'all 0.2s',
+                fontSize: '1rem',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px'
               }}
             >
-              👥 Registered Users ({regularUsers.length})
+              👥 Users ({regularUsers.length})
             </button>
-            <button
+            <button 
               onClick={() => setActiveTab('admins')}
-              style={{
-                padding: '10px 20px',
-                borderRadius: '10px',
+              style={{ 
+                padding: '12px 16px', 
+                background: activeTab === 'admins' ? 'rgba(255,255,255,0.1)' : 'transparent', 
+                color: activeTab === 'admins' ? '#fff' : 'rgba(255,255,255,0.7)', 
+                borderRadius: '8px', 
+                fontWeight: activeTab === 'admins' ? '600' : '400',
                 border: 'none',
-                background: activeTab === 'admins' ? 'var(--gradient-gold)' : '#fff',
-                color: activeTab === 'admins' ? 'var(--primary)' : 'var(--text-light)',
-                fontWeight: '700',
+                textAlign: 'left',
                 cursor: 'pointer',
-                boxShadow: activeTab === 'admins' ? '0 4px 6px -1px rgba(0,0,0,0.1)' : 'none',
-                transition: 'all 0.2s',
+                fontSize: '1rem',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px'
               }}
             >
-              🛡️ Admin List ({adminUsers.length})
+              🛡️ Admins ({adminUsers.length})
             </button>
-          </div>
+          </nav>
+        </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
-            <div>
-              <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', color: 'var(--primary)', marginBottom: '8px' }}>
-                {activeTab === 'users' ? 'Manage Registered Users' : 'Manage Admin Accounts'}
-              </h1>
-              <p style={{ color: 'var(--text-light)' }}>
-                {activeTab === 'users' 
-                  ? `Showing all ${regularUsers.length} user accounts registered on HK Realty` 
-                  : `Showing all ${adminUsers.length} authorized administrator accounts`}
-              </p>
-            </div>
-            <div style={{ display: 'flex', gap: '12px' }}>
-              {activeTab === 'admins' && (
-                <button 
-                  onClick={() => setShowAddAdminModal(true)} 
-                  className="btn btn-primary btn-sm"
-                  style={{ padding: '8px 18px', background: 'var(--gradient-gold)', color: 'var(--primary)', border: 'none', fontWeight: '700' }}
-                >
-                  ➕ Add New Admin
-                </button>
-              )}
-              <button 
-                onClick={fetchUsersData} 
-                className="btn btn-outline-dark btn-sm"
-                style={{ padding: '8px 16px' }}
-                disabled={loading}
+        {/* Main Content */}
+        <div className="responsive-main-content">
+          <div className="container" style={{ maxWidth: '1200px', margin: '0' }}>
+            
+            {/* Tabs Selector */}
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', borderBottom: '1px solid #E5E7EB', paddingBottom: '12px', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => setActiveTab('users')}
+                style={{
+                  padding: '10px 20px',
+                  borderRadius: '10px',
+                  border: 'none',
+                  background: activeTab === 'users' ? 'var(--primary)' : '#fff',
+                  color: activeTab === 'users' ? '#fff' : 'var(--text-light)',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  boxShadow: activeTab === 'users' ? '0 4px 6px -1px rgba(0,0,0,0.1)' : 'none',
+                  transition: 'all 0.2s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
               >
-                {loading ? 'Refreshing...' : '🔄 Refresh List'}
+                👥 Registered Users ({regularUsers.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('admins')}
+                style={{
+                  padding: '10px 20px',
+                  borderRadius: '10px',
+                  border: 'none',
+                  background: activeTab === 'admins' ? 'var(--gradient-gold)' : '#fff',
+                  color: activeTab === 'admins' ? 'var(--primary)' : 'var(--text-light)',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  boxShadow: activeTab === 'admins' ? '0 4px 6px -1px rgba(0,0,0,0.1)' : 'none',
+                  transition: 'all 0.2s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+              >
+                🛡️ Admin List ({adminUsers.length})
               </button>
             </div>
-          </div>
 
-          <div className="card" style={{ padding: '24px', marginBottom: '24px' }}>
-            <input 
-              type="text" 
-              placeholder={activeTab === 'users' ? "Search users by name or email..." : "Search admins by name or email..."}
-              className="form-input"
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              style={{ maxWidth: '400px' }}
-            />
-          </div>
-
-          <div className="card" style={{ overflow: 'auto' }}>
-            {loading ? (
-              <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-light)' }}>
-                Loading account list...
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
+              <div>
+                <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.5rem, 4vw, 2.2rem)', color: 'var(--primary)', marginBottom: '8px' }}>
+                  {activeTab === 'users' ? 'Manage Registered Users' : 'Manage Admin Accounts'}
+                </h1>
+                <p style={{ color: 'var(--text-light)' }}>
+                  {activeTab === 'users' 
+                    ? `Showing all ${regularUsers.length} user accounts registered on HK Realty` 
+                    : `Showing all ${adminUsers.length} authorized administrator accounts`}
+                </p>
               </div>
-            ) : (
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                <thead>
-                  <tr style={{ background: '#F9FAFB', borderBottom: '2px solid #E5E7EB' }}>
-                    <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>
-                      {activeTab === 'users' ? 'User' : 'Admin'}
-                    </th>
-                    <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>Role</th>
-                    <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>Joined Date</th>
-                    <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>Status</th>
-                    <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase', textAlign: 'right' }}>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredList.map(usr => (
-                    <tr key={usr.id} style={{ borderBottom: '1px solid #E5E7EB' }}>
-                      <td style={{ padding: '16px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                          <div style={{ 
-                            width: '40px', 
-                            height: '40px', 
-                            borderRadius: '50%', 
-                            background: usr.role === 'Admin' ? 'var(--gradient-gold)' : 'var(--primary)', 
-                            color: usr.role === 'Admin' ? 'var(--primary)' : '#fff', 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            justifyContent: 'center', 
-                            fontWeight: '700' 
-                          }}>
-                            {usr.name ? usr.name.charAt(0).toUpperCase() : 'U'}
-                          </div>
-                          <div>
-                            <div style={{ fontWeight: '600', color: 'var(--primary)' }}>{usr.name}</div>
-                            <div style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>{usr.email}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td style={{ padding: '16px' }}>
-                        <span style={{ 
-                          padding: '4px 10px', 
-                          borderRadius: '50px', 
-                          fontSize: '0.75rem', 
-                          fontWeight: '700', 
-                          background: usr.role === 'Admin' ? 'rgba(217,119,6,0.1)' : '#F3F4F6', 
-                          color: usr.role === 'Admin' ? '#D97706' : 'var(--primary)' 
-                        }}>
-                          {usr.role === 'Admin' ? '🛡️ Admin' : '👤 User'}
-                        </span>
-                      </td>
-                      <td style={{ padding: '16px', fontSize: '0.85rem', color: 'var(--text-light)' }}>
-                        {usr.joinedDate}
-                      </td>
-                      <td style={{ padding: '16px' }}>
-                        <span style={{ color: usr.status === 'Active' ? 'var(--success)' : 'var(--error)', fontSize: '0.85rem', fontWeight: '600' }}>
-                          ● {usr.status}
-                        </span>
-                      </td>
-                      <td style={{ padding: '16px', textAlign: 'right' }}>
-                        <button onClick={() => setSelectedUser(usr)} style={{ color: 'var(--info)', fontSize: '0.85rem', fontWeight: '600', marginRight: '12px', background: 'none', border: 'none', cursor: 'pointer' }}>View</button>
-                        {usr.role !== 'Admin' ? (
-                          <>
-                            <button onClick={() => toggleStatus(usr.id)} style={{ color: usr.status === 'Active' ? '#D97706' : 'var(--success)', fontSize: '0.85rem', fontWeight: '600', marginRight: '12px', background: 'none', border: 'none', cursor: 'pointer' }}>
-                              {usr.status === 'Active' ? 'Block' : 'Unblock'}
-                            </button>
-                            <button onClick={() => handleDeleteUser(usr.id)} style={{ color: 'var(--error)', fontSize: '0.85rem', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer' }}>Delete</button>
-                          </>
-                        ) : (
-                          usr.email?.toLowerCase().trim() !== 'mrharsh818206@gmail.com' && (
-                            <button onClick={() => handleDeleteUser(usr.id)} style={{ color: 'var(--error)', fontSize: '0.85rem', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer' }}>Remove Admin</button>
-                          )
-                        )}
-                      </td>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                {activeTab === 'admins' && (
+                  <button 
+                    onClick={() => setShowAddAdminModal(true)} 
+                    className="btn btn-primary btn-sm"
+                    style={{ padding: '8px 18px', background: 'var(--gradient-gold)', color: 'var(--primary)', border: 'none', fontWeight: '700' }}
+                  >
+                    ➕ Add New Admin
+                  </button>
+                )}
+                <button 
+                  onClick={fetchUsersData} 
+                  className="btn btn-outline-dark btn-sm"
+                  style={{ padding: '8px 16px' }}
+                  disabled={loading}
+                >
+                  {loading ? 'Refreshing...' : '🔄 Refresh List'}
+                </button>
+              </div>
+            </div>
+
+            <div className="card" style={{ padding: '24px', marginBottom: '24px' }}>
+              <input 
+                type="text" 
+                placeholder={activeTab === 'users' ? "Search users by name or email..." : "Search admins by name or email..."}
+                className="form-input"
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                style={{ maxWidth: '400px', width: '100%' }}
+              />
+            </div>
+
+            <div className="card responsive-table-container">
+              {loading ? (
+                <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-light)' }}>
+                  Loading account list...
+                </div>
+              ) : (
+                <table style={{ width: '100%', minWidth: '650px', borderCollapse: 'collapse', textAlign: 'left' }}>
+                  <thead>
+                    <tr style={{ background: '#F9FAFB', borderBottom: '2px solid #E5E7EB' }}>
+                      <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>
+                        {activeTab === 'users' ? 'User' : 'Admin'}
+                      </th>
+                      <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>Role</th>
+                      <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>Joined Date</th>
+                      <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>Status</th>
+                      <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase', textAlign: 'right' }}>Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-            {!loading && filteredList.length === 0 && (
-              <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-light)' }}>
-                No {activeTab === 'users' ? 'users' : 'admins'} found matching "{searchTerm}"
-              </div>
-            )}
+                  </thead>
+                  <tbody>
+                    {filteredList.map(usr => (
+                      <tr key={usr.id} style={{ borderBottom: '1px solid #E5E7EB' }}>
+                        <td style={{ padding: '16px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <div style={{ 
+                              width: '40px', 
+                              height: '40px', 
+                              borderRadius: '50%', 
+                              background: usr.role === 'Admin' ? 'var(--gradient-gold)' : 'var(--primary)', 
+                              color: usr.role === 'Admin' ? 'var(--primary)' : '#fff', 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'center', 
+                              fontWeight: '700' 
+                            }}>
+                              {usr.name ? usr.name.charAt(0).toUpperCase() : 'U'}
+                            </div>
+                            <div>
+                              <div style={{ fontWeight: '600', color: 'var(--primary)' }}>{usr.name}</div>
+                              <div style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>{usr.email}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td style={{ padding: '16px' }}>
+                          <span style={{ 
+                            padding: '4px 10px', 
+                            borderRadius: '50px', 
+                            fontSize: '0.75rem', 
+                            fontWeight: '700', 
+                            background: usr.role === 'Admin' ? 'rgba(217,119,6,0.1)' : '#F3F4F6', 
+                            color: usr.role === 'Admin' ? '#D97706' : 'var(--primary)' 
+                          }}>
+                            {usr.role === 'Admin' ? '🛡️ Admin' : '👤 User'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '16px', fontSize: '0.85rem', color: 'var(--text-light)' }}>
+                          {usr.joinedDate}
+                        </td>
+                        <td style={{ padding: '16px' }}>
+                          <span style={{ color: usr.status === 'Active' ? 'var(--success)' : 'var(--error)', fontSize: '0.85rem', fontWeight: '600' }}>
+                            ● {usr.status}
+                          </span>
+                        </td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          <button onClick={() => setSelectedUser(usr)} style={{ color: 'var(--info)', fontSize: '0.85rem', fontWeight: '600', marginRight: '12px', background: 'none', border: 'none', cursor: 'pointer' }}>View</button>
+                          {usr.role !== 'Admin' ? (
+                            <>
+                              <button onClick={() => toggleStatus(usr.id)} style={{ color: usr.status === 'Active' ? '#D97706' : 'var(--success)', fontSize: '0.85rem', fontWeight: '600', marginRight: '12px', background: 'none', border: 'none', cursor: 'pointer' }}>
+                                {usr.status === 'Active' ? 'Block' : 'Unblock'}
+                              </button>
+                              <button onClick={() => handleDeleteUser(usr.id)} style={{ color: 'var(--error)', fontSize: '0.85rem', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer' }}>Delete</button>
+                            </>
+                          ) : (
+                            usr.email?.toLowerCase().trim() !== 'mrharsh818206@gmail.com' && (
+                              <button onClick={() => handleDeleteUser(usr.id)} style={{ color: 'var(--error)', fontSize: '0.85rem', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer' }}>Remove Admin</button>
+                            )
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+              {!loading && filteredList.length === 0 && (
+                <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-light)' }}>
+                  No {activeTab === 'users' ? 'users' : 'admins'} found matching "{searchTerm}"
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -483,6 +496,3 @@ export default function AdminUsersPage() {
     </Suspense>
   );
 }
-
-
-

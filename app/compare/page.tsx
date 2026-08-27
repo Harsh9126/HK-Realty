@@ -27,8 +27,12 @@ function CompareContent() {
   }
 
   return (
-    <div style={{ overflowX: 'auto', paddingBottom: '20px' }}>
-      <table style={{ width: '100%', minWidth: '800px', borderCollapse: 'collapse', textAlign: 'left', background: '#fff', borderRadius: '12px', overflow: 'hidden', boxShadow: 'var(--shadow-md)' }}>
+    <div>
+      <p className="show-mobile" style={{ fontSize: '0.8rem', color: 'var(--secondary)', fontWeight: '600', marginBottom: '12px', textAlign: 'center' }}>
+        👈 Swipe table horizontally to compare all features 👉
+      </p>
+      <div className="responsive-table-container" style={{ paddingBottom: '20px' }}>
+        <table style={{ width: '100%', minWidth: '750px', borderCollapse: 'collapse', textAlign: 'left', background: '#fff', borderRadius: '12px', overflow: 'hidden', boxShadow: 'var(--shadow-md)' }}>
         <thead>
           <tr>
             <th style={{ width: '200px', padding: '24px', background: '#F9FAFB', borderBottom: '2px solid #E5E7EB', color: 'var(--primary)', fontFamily: 'var(--font-display)', fontSize: '1.2rem' }}>Features</th>

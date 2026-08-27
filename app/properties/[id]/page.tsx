@@ -65,7 +65,7 @@ export default function PropertyDetailPage() {
 
       <section className="section" style={{ paddingTop: '0' }}>
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '32px', marginTop: '-40px', position: 'relative', zIndex: 1, alignItems: 'start' }}>
+          <div className="detail-layout-grid">
             <div>
               <div className="card" style={{ padding: '28px', marginBottom: '24px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
@@ -73,7 +73,7 @@ export default function PropertyDetailPage() {
                     <div style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: '700', color: 'var(--primary)' }}>{formatPrice(property.price, property.priceUnit, property.purpose)}</div>
                     <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '4px' }}>{property.area} {property.areaUnit}</p>
                   </div>
-                  <div style={{ display: 'flex', gap: '12px' }}>
+                  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                     <a href={'tel:' + property.agentPhone} className="btn btn-primary">Call Agent</a>
                     <a href={'https://wa.me/' + property.agentPhone.replace(/\D/g, '')} className="btn btn-outline-dark">WhatsApp</a>
                   </div>
@@ -101,10 +101,10 @@ export default function PropertyDetailPage() {
                   </div>
                   <div className="card" style={{ padding: '28px', marginBottom: '24px' }}>
                     <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', color: 'var(--primary)', marginBottom: '16px' }}>Amenities</h2>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '12px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '12px' }}>
                       {property.amenities.map(amenity => (
-                        <div key={amenity} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', background: 'var(--bg)', borderRadius: '10px', fontSize: '0.85rem', fontWeight: '500', color: 'var(--text)' }}>
-                          <span style={{ color: 'var(--success)' }}>Check</span> {amenity}
+                        <div key={amenity} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', background: 'var(--bg)', borderRadius: '10px', fontSize: '0.85rem', fontWeight: '500', color: 'var(--text)' }}>
+                          <span style={{ color: 'var(--success)' }}>✓</span> {amenity}
                         </div>
                       ))}
                     </div>
@@ -125,7 +125,7 @@ export default function PropertyDetailPage() {
               )}
             </div>
 
-            <div style={{ position: 'sticky', top: '100px' }}>
+            <div>
               <div className="card" style={{ padding: '24px', marginBottom: '20px' }}>
                 <h3 style={{ fontFamily: 'var(--font-display)', color: 'var(--primary)', marginBottom: '16px' }}>Your Agent</h3>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
@@ -155,6 +155,24 @@ export default function PropertyDetailPage() {
           )}
         </div>
       </section>
+
+      <style jsx>{`
+        .detail-layout-grid {
+          display: grid;
+          grid-template-columns: 1fr 380px;
+          gap: 32px;
+          margin-top: -40px;
+          position: relative;
+          z-index: 1;
+          align-items: start;
+        }
+        @media (max-width: 1024px) {
+          .detail-layout-grid {
+            grid-template-columns: 1fr;
+            margin-top: 16px;
+          }
+        }
+      `}</style>
     </>
   );
 }

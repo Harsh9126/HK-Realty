@@ -5,6 +5,14 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { onAuthStateChanged, updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import MobileSectionNav from '@/components/MobileSectionNav';
+
+const dashboardNavItems = [
+  { href: '/dashboard', label: 'Dashboard', icon: '📊' },
+  { href: '/wishlist', label: 'Saved Properties', icon: '❤️' },
+  { href: '/dashboard/inquiries', label: 'My Inquiries', icon: '📨' },
+  { href: '/dashboard/settings', label: 'Settings', icon: '⚙️' },
+];
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -94,119 +102,122 @@ export default function SettingsPage() {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: 'calc(100vh - 80px)', background: 'var(--bg)', paddingTop: '80px' }}>
-      {/* Sidebar */}
-      <div style={{ width: '250px', background: '#fff', borderRight: '1px solid #E5E7EB', padding: '24px', display: 'flex', flexDirection: 'column' }} className="hide-mobile">
-        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--primary)', marginBottom: '32px' }}>My Account</h2>
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
-          <Link href="/dashboard" style={{ padding: '12px 16px', color: 'var(--text-light)', borderRadius: '8px' }}>📊 Dashboard</Link>
-          <Link href="/wishlist" style={{ padding: '12px 16px', color: 'var(--text-light)', borderRadius: '8px' }}>❤️ Saved Properties</Link>
-          <Link href="/dashboard/inquiries" style={{ padding: '12px 16px', color: 'var(--text-light)', borderRadius: '8px' }}>📨 My Inquiries</Link>
-          <Link href="/dashboard/settings" style={{ padding: '12px 16px', background: 'rgba(10,37,64,0.05)', color: 'var(--primary)', borderRadius: '8px', fontWeight: '600' }}>⚙️ Settings</Link>
-        </nav>
-        <button
-          className="btn btn-outline-dark"
-          style={{ width: '100%', justifyContent: 'center' }}
-          onClick={async () => {
-            const { signOut } = await import('firebase/auth');
-            await signOut(auth);
-            window.location.href = '/';
-          }}
-        >
-          Log Out
-        </button>
-      </div>
+    <>
+      <MobileSectionNav title="User Account" items={dashboardNavItems} />
+      <div className="responsive-sidebar-container">
+        {/* Sidebar */}
+        <div style={{ width: '250px', background: '#fff', borderRight: '1px solid #E5E7EB', padding: '24px', display: 'flex', flexDirection: 'column' }} className="hide-mobile">
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--primary)', marginBottom: '32px' }}>My Account</h2>
+          <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
+            <Link href="/dashboard" style={{ padding: '12px 16px', color: 'var(--text-light)', borderRadius: '8px' }}>📊 Dashboard</Link>
+            <Link href="/wishlist" style={{ padding: '12px 16px', color: 'var(--text-light)', borderRadius: '8px' }}>❤️ Saved Properties</Link>
+            <Link href="/dashboard/inquiries" style={{ padding: '12px 16px', color: 'var(--text-light)', borderRadius: '8px' }}>📨 My Inquiries</Link>
+            <Link href="/dashboard/settings" style={{ padding: '12px 16px', background: 'rgba(10,37,64,0.05)', color: 'var(--primary)', borderRadius: '8px', fontWeight: '600' }}>⚙️ Settings</Link>
+          </nav>
+          <button
+            className="btn btn-outline-dark"
+            style={{ width: '100%', justifyContent: 'center' }}
+            onClick={async () => {
+              const { signOut } = await import('firebase/auth');
+              await signOut(auth);
+              window.location.href = '/';
+            }}
+          >
+            Log Out
+          </button>
+        </div>
 
-      {/* Main Content */}
-      <div style={{ flex: 1, padding: '40px' }}>
-        <div className="container" style={{ maxWidth: '700px', margin: '0' }}>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', color: 'var(--primary)', marginBottom: '8px' }}>Settings</h1>
-          <p style={{ color: 'var(--text-light)', marginBottom: '40px' }}>Manage your account details and preferences.</p>
+        {/* Main Content */}
+        <div className="responsive-main-content">
+          <div className="container" style={{ maxWidth: '700px', margin: '0' }}>
+            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.5rem, 4vw, 2rem)', color: 'var(--primary)', marginBottom: '8px' }}>Settings</h1>
+            <p style={{ color: 'var(--text-light)', marginBottom: '40px' }}>Manage your account details and preferences.</p>
 
-          {/* Profile Section */}
-          <div className="card" style={{ padding: '32px', marginBottom: '24px' }}>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', color: 'var(--primary)', marginBottom: '8px' }}>Profile Information</h2>
-            <p style={{ color: 'var(--text-light)', fontSize: '0.9rem', marginBottom: '24px' }}>Update your display name.</p>
+            {/* Profile Section */}
+            <div className="card" style={{ padding: '28px', marginBottom: '24px' }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', color: 'var(--primary)', marginBottom: '8px' }}>Profile Information</h2>
+              <p style={{ color: 'var(--text-light)', fontSize: '0.9rem', marginBottom: '24px' }}>Update your display name.</p>
 
-            <form onSubmit={handleUpdateProfile}>
-              <div className="form-group" style={{ marginBottom: '16px' }}>
-                <label className="form-label">Full Name</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={displayName}
-                  onChange={e => setDisplayName(e.target.value)}
-                  placeholder="Your full name"
-                  required
-                />
-              </div>
-              <div className="form-group" style={{ marginBottom: '24px' }}>
-                <label className="form-label">Email Address</label>
-                <input
-                  type="email"
-                  className="form-input"
-                  value={user?.email || ''}
-                  disabled
-                  style={{ opacity: 0.6, cursor: 'not-allowed' }}
-                />
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '6px' }}>Email cannot be changed.</p>
-              </div>
-              {profileMsg && <p style={{ color: '#10B981', fontSize: '0.9rem', marginBottom: '16px' }}>✅ {profileMsg}</p>}
-              {profileError && <p style={{ color: 'var(--error)', fontSize: '0.9rem', marginBottom: '16px' }}>❌ {profileError}</p>}
-              <button type="submit" className="btn btn-primary" disabled={profileLoading}>
-                {profileLoading ? 'Saving...' : 'Save Changes'}
-              </button>
-            </form>
-          </div>
+              <form onSubmit={handleUpdateProfile}>
+                <div className="form-group" style={{ marginBottom: '16px' }}>
+                  <label className="form-label">Full Name</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    value={displayName}
+                    onChange={e => setDisplayName(e.target.value)}
+                    placeholder="Your full name"
+                    required
+                  />
+                </div>
+                <div className="form-group" style={{ marginBottom: '24px' }}>
+                  <label className="form-label">Email Address</label>
+                  <input
+                    type="email"
+                    className="form-input"
+                    value={user?.email || ''}
+                    disabled
+                    style={{ opacity: 0.6, cursor: 'not-allowed' }}
+                  />
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '6px' }}>Email cannot be changed.</p>
+                </div>
+                {profileMsg && <p style={{ color: '#10B981', fontSize: '0.9rem', marginBottom: '16px' }}>✅ {profileMsg}</p>}
+                {profileError && <p style={{ color: 'var(--error)', fontSize: '0.9rem', marginBottom: '16px' }}>❌ {profileError}</p>}
+                <button type="submit" className="btn btn-primary" disabled={profileLoading}>
+                  {profileLoading ? 'Saving...' : 'Save Changes'}
+                </button>
+              </form>
+            </div>
 
-          {/* Password Section */}
-          <div className="card" style={{ padding: '32px' }}>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', color: 'var(--primary)', marginBottom: '8px' }}>Change Password</h2>
-            <p style={{ color: 'var(--text-light)', fontSize: '0.9rem', marginBottom: '24px' }}>Update your account password.</p>
+            {/* Password Section */}
+            <div className="card" style={{ padding: '28px' }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', color: 'var(--primary)', marginBottom: '8px' }}>Change Password</h2>
+              <p style={{ color: 'var(--text-light)', fontSize: '0.9rem', marginBottom: '24px' }}>Update your account password.</p>
 
-            <form onSubmit={handleChangePassword}>
-              <div className="form-group" style={{ marginBottom: '16px' }}>
-                <label className="form-label">Current Password</label>
-                <input
-                  type="password"
-                  className="form-input"
-                  value={currentPassword}
-                  onChange={e => setCurrentPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                />
-              </div>
-              <div className="form-group" style={{ marginBottom: '16px' }}>
-                <label className="form-label">New Password</label>
-                <input
-                  type="password"
-                  className="form-input"
-                  value={newPassword}
-                  onChange={e => setNewPassword(e.target.value)}
-                  placeholder="Min. 6 characters"
-                  required
-                />
-              </div>
-              <div className="form-group" style={{ marginBottom: '24px' }}>
-                <label className="form-label">Confirm New Password</label>
-                <input
-                  type="password"
-                  className="form-input"
-                  value={confirmNewPassword}
-                  onChange={e => setConfirmNewPassword(e.target.value)}
-                  placeholder="Repeat new password"
-                  required
-                />
-              </div>
-              {passwordMsg && <p style={{ color: '#10B981', fontSize: '0.9rem', marginBottom: '16px' }}>✅ {passwordMsg}</p>}
-              {passwordError && <p style={{ color: 'var(--error)', fontSize: '0.9rem', marginBottom: '16px' }}>❌ {passwordError}</p>}
-              <button type="submit" className="btn btn-primary" disabled={passwordLoading}>
-                {passwordLoading ? 'Changing...' : 'Change Password'}
-              </button>
-            </form>
+              <form onSubmit={handleChangePassword}>
+                <div className="form-group" style={{ marginBottom: '16px' }}>
+                  <label className="form-label">Current Password</label>
+                  <input
+                    type="password"
+                    className="form-input"
+                    value={currentPassword}
+                    onChange={e => setCurrentPassword(e.target.value)}
+                    placeholder="••••••••"
+                    required
+                  />
+                </div>
+                <div className="form-group" style={{ marginBottom: '16px' }}>
+                  <label className="form-label">New Password</label>
+                  <input
+                    type="password"
+                    className="form-input"
+                    value={newPassword}
+                    onChange={e => setNewPassword(e.target.value)}
+                    placeholder="Min. 6 characters"
+                    required
+                  />
+                </div>
+                <div className="form-group" style={{ marginBottom: '24px' }}>
+                  <label className="form-label">Confirm New Password</label>
+                  <input
+                    type="password"
+                    className="form-input"
+                    value={confirmNewPassword}
+                    onChange={e => setConfirmNewPassword(e.target.value)}
+                    placeholder="Repeat new password"
+                    required
+                  />
+                </div>
+                {passwordMsg && <p style={{ color: '#10B981', fontSize: '0.9rem', marginBottom: '16px' }}>✅ {passwordMsg}</p>}
+                {passwordError && <p style={{ color: 'var(--error)', fontSize: '0.9rem', marginBottom: '16px' }}>❌ {passwordError}</p>}
+                <button type="submit" className="btn btn-primary" disabled={passwordLoading}>
+                  {passwordLoading ? 'Changing...' : 'Change Password'}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

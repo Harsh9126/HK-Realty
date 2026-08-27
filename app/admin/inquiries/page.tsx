@@ -4,6 +4,16 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Inquiry } from '@/data/sampleInquiries';
 import { getInquiries } from '@/lib/firestore';
+import MobileSectionNav from '@/components/MobileSectionNav';
+
+const adminNavItems = [
+  { href: '/admin', label: 'Dashboard', icon: '📊' },
+  { href: '/admin/properties', label: 'Properties', icon: '🏘️' },
+  { href: '/admin/projects', label: 'Projects', icon: '🏗️' },
+  { href: '/admin/inquiries', label: 'Inquiries', icon: '📨' },
+  { href: '/admin/users?tab=users', label: 'Users', icon: '👥' },
+  { href: '/admin/users?tab=admins', label: 'Admins', icon: '🛡️' },
+];
 
 export default function AdminInquiriesPage() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
@@ -34,73 +44,76 @@ export default function AdminInquiriesPage() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: 'calc(100vh - 80px)', background: 'var(--bg)', paddingTop: '80px' }}>
-      {/* Sidebar */}
-      <div style={{ width: '250px', background: 'var(--primary)', color: '#fff', padding: '24px', display: 'flex', flexDirection: 'column' }} className="hide-mobile">
-        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--secondary)', marginBottom: '32px' }}>HK Realty Admin</h2>
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <Link href="/admin" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>📊 Dashboard</Link>
-          <Link href="/admin/properties" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>🏘️ Properties</Link>
-          <Link href="/admin/projects" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>🏗️ Projects</Link>
-          <Link href="/admin/inquiries" style={{ padding: '12px 16px', background: 'rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px', fontWeight: '600' }}>📨 Inquiries</Link>
-          <Link href="/admin/users?tab=users" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>👥 Users</Link>
-          <Link href="/admin/users?tab=admins" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>🛡️ Admins</Link>
-        </nav>
-      </div>
+    <div style={{ width: '100%' }}>
+      <MobileSectionNav title="Admin" items={adminNavItems} />
+      <div className="responsive-sidebar-container">
+        {/* Sidebar */}
+        <div style={{ width: '250px', background: 'var(--primary)', color: '#fff', padding: '24px', display: 'flex', flexDirection: 'column' }} className="hide-mobile">
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--secondary)', marginBottom: '32px' }}>HK Realty Admin</h2>
+          <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <Link href="/admin" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>📊 Dashboard</Link>
+            <Link href="/admin/properties" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>🏘️ Properties</Link>
+            <Link href="/admin/projects" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>🏗️ Projects</Link>
+            <Link href="/admin/inquiries" style={{ padding: '12px 16px', background: 'rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px', fontWeight: '600' }}>📨 Inquiries</Link>
+            <Link href="/admin/users?tab=users" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>👥 Users</Link>
+            <Link href="/admin/users?tab=admins" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>🛡️ Admins</Link>
+          </nav>
+        </div>
 
-      {/* Main Content */}
-      <div style={{ flex: 1, padding: '40px' }}>
-        <div className="container" style={{ maxWidth: '1200px', margin: '0' }}>
-          <div style={{ marginBottom: '32px' }}>
-            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', color: 'var(--primary)', marginBottom: '8px' }}>Manage Inquiries</h1>
-            <p style={{ color: 'var(--text-light)' }}>Track and respond to customer leads.</p>
-          </div>
+        {/* Main Content */}
+        <div className="responsive-main-content">
+          <div className="container" style={{ maxWidth: '1200px', margin: '0' }}>
+            <div style={{ marginBottom: '32px' }}>
+              <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.5rem, 4vw, 2.2rem)', color: 'var(--primary)', marginBottom: '8px' }}>Manage Inquiries</h1>
+              <p style={{ color: 'var(--text-light)' }}>Track and respond to customer leads.</p>
+            </div>
 
-          <div className="card" style={{ overflow: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-              <thead>
-                <tr style={{ background: '#F9FAFB', borderBottom: '2px solid #E5E7EB' }}>
-                  <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>Client</th>
-                  <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>Contact</th>
-                  <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>Property / Interest</th>
-                  <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>Date</th>
-                  <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>Status</th>
-                  <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase', textAlign: 'right' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {inquiries.map(inq => (
-                  <tr key={inq.id} style={{ borderBottom: '1px solid #E5E7EB' }}>
-                    <td style={{ padding: '16px', fontWeight: '600', color: 'var(--primary)' }}>{inq.name}</td>
-                    <td style={{ padding: '16px', fontSize: '0.85rem' }}>
-                      <div>{inq.phone}</div>
-                      {inq.email && <div style={{ color: 'var(--text-light)' }}>{inq.email}</div>}
-                    </td>
-                    <td style={{ padding: '16px', fontSize: '0.85rem', color: 'var(--text-light)' }}>{inq.propTitle}</td>
-                    <td style={{ padding: '16px', fontSize: '0.85rem', color: 'var(--text-light)' }}>
-                      {new Date(inq.date).toLocaleDateString()}
-                    </td>
-                    <td style={{ padding: '16px' }}>
-                      <span style={{ 
-                        display: 'inline-block', 
-                        padding: '4px 10px', 
-                        borderRadius: '50px', 
-                        fontSize: '0.75rem', 
-                        fontWeight: '700', 
-                        textTransform: 'uppercase',
-                        background: inq.status === 'new' ? 'rgba(16,185,129,0.1)' : inq.status === 'contacted' ? 'rgba(59,130,246,0.1)' : '#F3F4F6',
-                        color: inq.status === 'new' ? '#10B981' : inq.status === 'contacted' ? '#3B82F6' : '#9CA3AF'
-                      }}>
-                        {inq.status}
-                      </span>
-                    </td>
-                    <td style={{ padding: '16px', textAlign: 'right' }}>
-                      <button onClick={() => setSelectedInquiry(inq)} className="btn btn-outline-dark btn-sm" style={{ padding: '6px 12px', fontSize: '0.75rem' }}>View</button>
-                    </td>
+            <div className="card responsive-table-container">
+              <table style={{ width: '100%', minWidth: '650px', borderCollapse: 'collapse', textAlign: 'left' }}>
+                <thead>
+                  <tr style={{ background: '#F9FAFB', borderBottom: '2px solid #E5E7EB' }}>
+                    <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>Client</th>
+                    <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>Contact</th>
+                    <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>Property / Interest</th>
+                    <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>Date</th>
+                    <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase' }}>Status</th>
+                    <th style={{ padding: '16px', color: 'var(--text-muted)', fontWeight: '600', fontSize: '0.85rem', textTransform: 'uppercase', textAlign: 'right' }}>Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {inquiries.map(inq => (
+                    <tr key={inq.id} style={{ borderBottom: '1px solid #E5E7EB' }}>
+                      <td style={{ padding: '16px', fontWeight: '600', color: 'var(--primary)' }}>{inq.name}</td>
+                      <td style={{ padding: '16px', fontSize: '0.85rem' }}>
+                        <div>{inq.phone}</div>
+                        {inq.email && <div style={{ color: 'var(--text-light)' }}>{inq.email}</div>}
+                      </td>
+                      <td style={{ padding: '16px', fontSize: '0.85rem', color: 'var(--text-light)' }}>{inq.propTitle}</td>
+                      <td style={{ padding: '16px', fontSize: '0.85rem', color: 'var(--text-light)' }}>
+                        {new Date(inq.date).toLocaleDateString()}
+                      </td>
+                      <td style={{ padding: '16px' }}>
+                        <span style={{ 
+                          display: 'inline-block', 
+                          padding: '4px 10px', 
+                          borderRadius: '50px', 
+                          fontSize: '0.75rem', 
+                          fontWeight: '700', 
+                          textTransform: 'uppercase',
+                          background: inq.status === 'new' ? 'rgba(16,185,129,0.1)' : inq.status === 'contacted' ? 'rgba(59,130,246,0.1)' : '#F3F4F6',
+                          color: inq.status === 'new' ? '#10B981' : inq.status === 'contacted' ? '#3B82F6' : '#9CA3AF'
+                        }}>
+                          {inq.status}
+                        </span>
+                      </td>
+                      <td style={{ padding: '16px', textAlign: 'right' }}>
+                        <button onClick={() => setSelectedInquiry(inq)} className="btn btn-outline-dark btn-sm" style={{ padding: '6px 12px', fontSize: '0.75rem' }}>View</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -171,4 +184,3 @@ export default function AdminInquiriesPage() {
     </div>
   );
 }
-
