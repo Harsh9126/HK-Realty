@@ -120,7 +120,7 @@ export default function AdminPropertiesPage() {
                     <tr key={prop.id} style={{ borderBottom: '1px solid #E5E7EB' }}>
                       <td style={{ padding: '16px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                          <img src={prop.images ? prop.images[0] : prop.image} alt={prop.title} style={{ width: '48px', height: '48px', borderRadius: '8px', objectFit: 'cover' }} />
+                          <img src={prop.images?.[0] || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9'} alt={prop.title} style={{ width: '48px', height: '48px', borderRadius: '8px', objectFit: 'cover' }} />
                           <div>
                             <div style={{ fontWeight: '600', color: 'var(--primary)', marginBottom: '4px' }}>{prop.title}</div>
                             <div style={{ fontSize: '0.75rem', color: 'var(--text-light)' }}>{prop.location}</div>
