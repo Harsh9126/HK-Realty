@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Property } from '@/data/sampleProperties';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getProperties, deleteProperty, updateProperty } from '@/lib/firestore';
 import MobileSectionNav from '@/components/MobileSectionNav';
 
@@ -20,6 +20,13 @@ export default function AdminPropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingProp, setEditingProp] = useState<Property | null>(null);
+
+  // Image upload state for edit modal
+  const editFileInputRef = useRef<HTMLInputElement>(null);
+  const [editNewImages, setEditNewImages] = useState<File[]>([]);
+  const [editNewPreviews, setEditNewPreviews] = useState<string[]>([]);
+  const [editUploading, setEditUploading] = useState(false);
+  const [editUploadProgress, setEditUploadProgress] = useState(0);
 
   const fetchPropertiesData = async () => {
     setLoading(true);
@@ -53,17 +60,102 @@ export default function AdminPropertiesPage() {
     }
   };
 
+  const openEditModal = (prop: Property) => {
+    setEditingProp({ ...prop });
+    setEditNewImages([]);
+    setEditNewPreviews([]);
+    setEditUploading(false);
+    setEditUploadProgress(0);
+  };
+
+  const handleEditImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const existingCount = editingProp?.images?.length || 0;
+    if (files.length + editNewImages.length + existingCount > 5) {
+      alert('Maximum 5 images allowed in total');
+      return;
+    }
+    setEditNewImages(prev => [...prev, ...files]);
+    setEditNewPreviews(prev => [...prev, ...files.map(f => URL.createObjectURL(f))]);
+  };
+
+  const removeExistingImage = (index: number) => {
+    if (!editingProp) return;
+    const updatedImages = (editingProp.images || []).filter((_, i) => i !== index);
+    setEditingProp({
+      ...editingProp,
+      images: updatedImages,
+    });
+  };
+
+  const removeNewImage = (index: number) => {
+    setEditNewImages(prev => prev.filter((_, i) => i !== index));
+    setEditNewPreviews(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const uploadImagesToCloudinary = async (fileList: File[]) => {
+    const uploadedUrls: string[] = [];
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'demo';
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || 'unsigned_preset';
+
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', uploadPreset);
+
+      try {
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+          method: 'POST',
+          body: formData,
+        });
+        if (res.ok) {
+          const data = await res.json();
+          uploadedUrls.push(data.secure_url);
+        }
+      } catch (err) {
+        console.error('Image upload failed:', err);
+      }
+      setEditUploadProgress(Math.round(((i + 1) / fileList.length) * 100));
+    }
+    return uploadedUrls;
+  };
+
   const handleSaveEdit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingProp) return;
-    setProperties(prev => prev.map(p => p.id === editingProp.id ? editingProp : p));
+
+    setEditUploading(true);
+    setEditUploadProgress(0);
+
     try {
-      await updateProperty(editingProp.id, editingProp);
+      let finalImages = [...(editingProp.images || [])];
+
+      // Upload new images if any
+      if (editNewImages.length > 0) {
+        const newUrls = await uploadImagesToCloudinary(editNewImages);
+        finalImages = [...finalImages, ...newUrls];
+      }
+
+      const updatedProp = {
+        ...editingProp,
+        images: finalImages,
+      };
+
+      setProperties(prev => prev.map(p => p.id === updatedProp.id ? updatedProp : p));
+      await updateProperty(updatedProp.id, updatedProp);
     } catch (err) {
       console.error('Failed to update property:', err);
+    } finally {
+      setEditUploading(false);
+      setEditUploadProgress(0);
+      setEditingProp(null);
+      setEditNewImages([]);
+      setEditNewPreviews([]);
     }
-    setEditingProp(null);
   };
+
+  const totalImageCount = (editingProp?.images?.length || 0) + editNewImages.length;
 
   return (
     <div style={{ width: '100%' }}>
@@ -146,7 +238,7 @@ export default function AdminPropertiesPage() {
                         )}
                       </td>
                       <td style={{ padding: '16px', textAlign: 'right' }}>
-                        <button onClick={() => setEditingProp({ ...prop })} style={{ color: 'var(--info)', fontSize: '0.85rem', fontWeight: '600', marginRight: '16px', background: 'none', border: 'none', cursor: 'pointer' }}>Edit</button>
+                        <button onClick={() => openEditModal(prop)} style={{ color: 'var(--info)', fontSize: '0.85rem', fontWeight: '600', marginRight: '16px', background: 'none', border: 'none', cursor: 'pointer' }}>Edit</button>
                         <button onClick={() => handleDelete(prop.id)} style={{ color: 'var(--error)', fontSize: '0.85rem', fontWeight: '600', background: 'none', border: 'none', cursor: 'pointer' }}>Delete</button>
                       </td>
                     </tr>
@@ -155,7 +247,7 @@ export default function AdminPropertiesPage() {
               </table>
               {filteredProps.length === 0 && (
                 <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-light)' }}>
-                  No properties found matching "{searchTerm}"
+                  No properties found matching &quot;{searchTerm}&quot;
                 </div>
               )}
             </div>
@@ -166,13 +258,48 @@ export default function AdminPropertiesPage() {
       {/* Edit Modal */}
       {editingProp && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-          <div style={{ background: '#fff', borderRadius: '16px', padding: '32px', width: '100%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}>
+          <div style={{ background: '#fff', borderRadius: '16px', padding: '32px', width: '100%', maxWidth: '650px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', color: 'var(--primary)' }}>Edit Property</h2>
               <button onClick={() => setEditingProp(null)} style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: 'var(--text-muted)' }}>✕</button>
             </div>
             
             <form onSubmit={handleSaveEdit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {/* Image Section */}
+              <div style={{ background: '#F9FAFB', borderRadius: '12px', padding: '20px', border: '1px solid #E5E7EB' }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '12px', color: 'var(--primary)' }}>📷 Property Images ({totalImageCount}/5)</label>
+                
+                {/* Existing Images */}
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '12px' }}>
+                  {(editingProp.images || []).map((src, i) => (
+                    <div key={`existing-${i}`} style={{ position: 'relative' }}>
+                      <img src={src} alt={`Image ${i + 1}`} style={{ width: '80px', height: '64px', objectFit: 'cover', borderRadius: '8px', border: '2px solid #E5E7EB' }} />
+                      <button type="button" onClick={() => removeExistingImage(i)} style={{ position: 'absolute', top: '-6px', right: '-6px', width: '20px', height: '20px', borderRadius: '50%', background: '#EF4444', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.65rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+                      {i === 0 && <span style={{ position: 'absolute', bottom: '2px', left: '2px', background: 'var(--secondary)', color: 'var(--primary)', fontSize: '0.55rem', fontWeight: '700', padding: '1px 4px', borderRadius: '3px' }}>MAIN</span>}
+                    </div>
+                  ))}
+
+                  {/* New Image Previews */}
+                  {editNewPreviews.map((src, i) => (
+                    <div key={`new-${i}`} style={{ position: 'relative' }}>
+                      <img src={src} alt={`New ${i + 1}`} style={{ width: '80px', height: '64px', objectFit: 'cover', borderRadius: '8px', border: '2px solid #10B981' }} />
+                      <button type="button" onClick={() => removeNewImage(i)} style={{ position: 'absolute', top: '-6px', right: '-6px', width: '20px', height: '20px', borderRadius: '50%', background: '#EF4444', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.65rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+                      <span style={{ position: 'absolute', bottom: '2px', left: '2px', background: '#10B981', color: '#fff', fontSize: '0.55rem', fontWeight: '700', padding: '1px 4px', borderRadius: '3px' }}>NEW</span>
+                    </div>
+                  ))}
+
+                  {/* Add More Button */}
+                  {totalImageCount < 5 && (
+                    <div
+                      onClick={() => editFileInputRef.current?.click()}
+                      style={{ width: '80px', height: '64px', border: '2px dashed #D1D5DB', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-muted)', fontSize: '1.3rem', transition: 'all 0.2s' }}
+                    >+</div>
+                  )}
+                </div>
+                <input ref={editFileInputRef} type="file" accept="image/*" multiple onChange={handleEditImageSelect} style={{ display: 'none' }} />
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', margin: 0 }}>Click + to add images · PNG, JPG up to 10MB · Max 5 total</p>
+              </div>
+
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '6px', color: 'var(--primary)' }}>Title</label>
                 <input type="text" className="form-input" value={editingProp.title} onChange={e => setEditingProp({ ...editingProp, title: e.target.value })} required />
@@ -187,14 +314,14 @@ export default function AdminPropertiesPage() {
                 <div>
                   <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '6px', color: 'var(--primary)' }}>Type</label>
                   <select className="form-input" value={editingProp.type} onChange={e => setEditingProp({ ...editingProp, type: e.target.value as any })}>
-                    {['residential', 'commercial', 'luxury', 'agricultural', 'industrial'].map(t => <option key={t} value={t}>{t}</option>)}
+                    {['Apartment', 'Villa', 'Plot', 'Commercial', 'Studio', 'Penthouse', 'Duplex', 'Bungalow'].map(t => <option key={t}>{t}</option>)}
                   </select>
                 </div>
 
                 <div>
                   <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '6px', color: 'var(--primary)' }}>Purpose</label>
                   <select className="form-input" value={editingProp.purpose} onChange={e => setEditingProp({ ...editingProp, purpose: e.target.value as any })}>
-                    <option value="buy">For Buy</option>
+                    <option value="sale">For Sale</option>
                     <option value="rent">For Rent</option>
                   </select>
                 </div>
@@ -205,11 +332,30 @@ export default function AdminPropertiesPage() {
                   <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '6px', color: 'var(--primary)' }}>Price (₹)</label>
                   <input type="number" className="form-input" value={editingProp.price} onChange={e => setEditingProp({ ...editingProp, price: Number(e.target.value) })} required />
                 </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '6px', color: 'var(--primary)' }}>Area (sq ft)</label>
+                  <input type="number" className="form-input" value={editingProp.area} onChange={e => setEditingProp({ ...editingProp, area: Number(e.target.value) })} />
+                </div>
               </div>
+
+              {/* Upload Progress */}
+              {editUploading && (
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>Uploading new images...</span>
+                    <span style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--primary)' }}>{editUploadProgress}%</span>
+                  </div>
+                  <div style={{ height: '6px', background: '#E5E7EB', borderRadius: '3px', overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${editUploadProgress}%`, background: 'var(--gradient-gold)', transition: 'width 0.3s ease', borderRadius: '3px' }} />
+                  </div>
+                </div>
+              )}
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '16px' }}>
                 <button type="button" onClick={() => setEditingProp(null)} className="btn btn-outline-dark" style={{ padding: '8px 16px' }}>Cancel</button>
-                <button type="submit" className="btn btn-primary" style={{ padding: '8px 20px' }}>Save Changes</button>
+                <button type="submit" className="btn btn-primary" style={{ padding: '8px 20px' }} disabled={editUploading}>
+                  {editUploading ? `Uploading... ${editUploadProgress}%` : 'Save Changes'}
+                </button>
               </div>
             </form>
           </div>
