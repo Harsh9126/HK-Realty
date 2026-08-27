@@ -2,11 +2,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { loginWithEmail, loginWithGoogle, isUserAdmin } from '@/lib/auth';
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -14,9 +12,9 @@ export default function LoginPage() {
 
   const redirectAfterAuth = (userEmail?: string | null) => {
     if (userEmail && isUserAdmin(userEmail)) {
-      router.push('/admin');
+      window.location.replace('/admin');
     } else {
-      router.push('/');
+      window.location.replace('/');
     }
   };
 
