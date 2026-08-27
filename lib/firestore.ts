@@ -76,6 +76,8 @@ export const addProperty = async (data: any) => {
   return addDoc(collection(db, 'properties'), { ...data, createdAt: serverTimestamp() });
 };
 
+export const addPropertyToFirestore = addProperty;
+
 export const updateProperty = async (id: string, data: any) => {
   return updateDoc(doc(db, 'properties', id), { ...data, updatedAt: serverTimestamp() });
 };
