@@ -130,9 +130,9 @@ export default function InvestmentPage() {
               </p>
               <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
                 {[
-                  { val: '₹500Cr+', lbl: 'Assets Managed' },
+                  { val: '₹4Cr+', lbl: 'Assets Managed' },
                   { val: '18%', lbl: 'Avg. Annual Returns' },
-                  { val: '300+', lbl: 'Investors Served' },
+                  { val: '4+', lbl: 'Investors Served' },
                 ].map((s) => (
                   <div key={s.lbl}>
                     <div style={{ fontSize: 28, fontWeight: 800, color: '#D4AF37' }}>{s.val}</div>
