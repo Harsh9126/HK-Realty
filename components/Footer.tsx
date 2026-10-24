@@ -216,7 +216,7 @@ export default function Footer() {
           gap: '16px',
         }}>
           <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.45)' }}>
-            © {new Date().getFullYear()} HK Realty. All rights reserved. | RERA Registered
+            © {new Date().getFullYear()} HK Realty. All rights reserved.
           </p>
           <div style={{ display: 'flex', gap: '24px' }}>
             {['Privacy Policy', 'Terms of Service', 'Disclaimer', 'Sitemap'].map((item) => (

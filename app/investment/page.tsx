@@ -158,7 +158,7 @@ export default function InvestmentPage() {
               {[
                 'World\'s fastest growing major economy',
                 'Urbanization driving 70M+ new homebuyers by 2030',
-                'RERA-regulated for investor protection',
+                'Transparent & legally compliant market',
                 'NRI-friendly policies & repatriation options',
                 'Infrastructure boom fueling tier-2 city growth',
                 'Post-pandemic demand surge still ongoing',

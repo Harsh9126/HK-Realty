@@ -35,7 +35,11 @@ export const sampleProjects: Project[] = [
     priceUnit: '₹',
     description: 'HK Skyline Residences is a landmark residential township featuring 2, 3, and 4 BHK apartments with world-class amenities. Set across 12 acres with lush green landscapes, clubhouse, and smart home features.',
     highlights: ['450 Premium Apartments', '12 Acres Gated Campus', 'Olympic Size Pool', 'Rooftop Sky Deck', 'EV Charging Stations', 'Smart Security System'],
-    images: ['/images/proj1-1.jpg', '/images/proj1-2.jpg'],
+    images: [
+      'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80',
+      'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80',
+      'https://images.unsplash.com/photo-1599427303058-f04cbcf4756f?w=800&q=80',
+    ],
   },
   {
     id: 'proj-002',
@@ -52,7 +56,11 @@ export const sampleProjects: Project[] = [
     priceUnit: '₹',
     description: 'A state-of-the-art commercial business park designed for modern enterprises. Features Grade-A office spaces, co-working zones, food court, rooftop lounge, and LEED-certified green building standards.',
     highlights: ['Grade-A Office Spaces', 'Co-Working Zones', 'LEED Certified', 'Data Center Ready', 'Rooftop Lounge', '500+ Parking Spots'],
-    images: ['/images/proj2-1.jpg', '/images/proj2-2.jpg'],
+    images: [
+      'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80',
+      'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80',
+      'https://images.unsplash.com/photo-1464938050520-ef2270bb8ce8?w=800&q=80',
+    ],
   },
   {
     id: 'proj-003',
@@ -69,7 +77,11 @@ export const sampleProjects: Project[] = [
     priceUnit: '₹',
     description: 'Exclusive collection of 30 ultra-luxury private villas nestled in the scenic hills of Lonavala. Each villa features a private pool, butler quarters, and panoramic valley views.',
     highlights: ['30 Private Villas', 'Infinity Pools', 'Valley Views', 'Smart Home Automation', 'Organic Garden', 'Helipad Access'],
-    images: ['/images/proj3-1.jpg', '/images/proj3-2.jpg'],
+    images: [
+      'https://images.unsplash.com/photo-1613977257592-4871e5fcd7c4?w=800&q=80',
+      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80',
+      'https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=800&q=80',
+    ],
   },
   {
     id: 'proj-004',
@@ -85,7 +97,11 @@ export const sampleProjects: Project[] = [
     priceUnit: '₹',
     description: 'HK Green Township is a successfully delivered eco-friendly residential project in Pune. The project received the Maharashtra Realty Excellence Award for Best Green Development.',
     highlights: ['350 Units Delivered', 'Zero-Waste Management', 'Solar Powered', 'Rainwater Harvesting', 'IGBC Certified', 'Award Winner'],
-    images: ['/images/proj4-1.jpg', '/images/proj4-2.jpg'],
+    images: [
+      'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80',
+      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80',
+      'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&q=80',
+    ],
     testimonial: 'HK Realty delivered exactly what they promised — quality construction, on-time delivery, and full transparency. My family absolutely loves our home in HK Green Township.',
     testimonialAuthor: 'Priya & Ankit Sharma, Homeowners',
   },
@@ -103,7 +119,10 @@ export const sampleProjects: Project[] = [
     priceUnit: '₹',
     description: 'A landmark mixed-use development in Bandra West combining luxury residences, retail boutiques, and corporate offices under one iconic tower. Fully sold out 8 months before completion.',
     highlights: ['Fully Sold Out', 'Iconic Tower Design', 'Luxury Residences', 'Retail Boutiques', 'Corporate Offices', 'Valet Parking'],
-    images: ['/images/proj5-1.jpg'],
+    images: [
+      'https://images.unsplash.com/photo-1555636222-cae831e670b3?w=800&q=80',
+      'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800&q=80',
+    ],
     testimonial: 'Investing in HK Metro Commerce was the best real estate decision I have made. Exceptional build quality and the returns have been outstanding.',
     testimonialAuthor: 'Rohit Jain, Investor & Businessman',
   },
@@ -121,7 +140,10 @@ export const sampleProjects: Project[] = [
     priceUnit: '₹',
     description: 'A fully operational industrial park housing 50 industrial units with state-of-the-art infrastructure, dedicated power substation, and excellent highway connectivity to JNPT port.',
     highlights: ['50 Industrial Units', 'Dedicated Power Substation', 'JNPT Connectivity', '24/7 Operations', 'Water Treatment Plant', 'ETP Compliant'],
-    images: ['/images/proj6-1.jpg'],
+    images: [
+      'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80',
+      'https://images.unsplash.com/photo-1553546895-531931aa1aa8?w=800&q=80',
+    ],
     testimonial: 'HK Industrial Hub gave our manufacturing business the perfect foundation. Infrastructure quality is top-notch and fully compliant.',
     testimonialAuthor: 'Suresh Patel, MD – Patel Industries',
   },

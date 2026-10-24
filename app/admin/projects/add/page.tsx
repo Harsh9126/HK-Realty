@@ -227,7 +227,7 @@ export default function AddProjectPage() {
               </div>
               <div>
                 <label style={labelStyle}>Key Highlights (comma separated)</label>
-                <input style={inputStyle} name="highlights" value={form.highlights} onChange={handleChange} placeholder="e.g. RERA Approved, Prime Location, Eco Friendly" />
+                <input style={inputStyle} name="highlights" value={form.highlights} onChange={handleChange} placeholder="e.g. Prime Location, Luxury Amenities, Eco Friendly" />
               </div>
             </div>
 

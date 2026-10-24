@@ -328,7 +328,7 @@ export default function HomePage() {
 
               {/* Floating feature pills */}
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '20px' }}>
-                {['✓ Verified Listings', '✓ Transparent Deals', '✓ Expert Guidance', '✓ RERA Registered'].map((feat) => (
+                {['✓ Verified Listings', '✓ Transparent Deals', '✓ Expert Guidance'].map((feat) => (
                   <span key={feat} style={{
                     padding: '6px 14px',
                     background: 'rgba(255,255,255,0.08)',
