@@ -38,15 +38,8 @@ export default function WishlistPage() {
             </p>
             <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
               <Link href="/properties" className="btn btn-primary">Browse Properties</Link>
-              {!loading && !user && (
-                <Link href="/auth/login" className="btn btn-outline-dark">Log In to Save</Link>
-              )}
+              <Link href="/contact" className="btn btn-outline-dark">Contact an Advisor</Link>
             </div>
-            {!loading && !user && (
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '24px' }}>
-                Note: You must be logged in to save properties permanently across devices.
-              </p>
-            )}
           </div>
         </div>
       </section>

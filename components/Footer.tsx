@@ -28,7 +28,7 @@ const footerLinks = {
     { label: 'Mortgage Calculator', href: '/calculator' },
     { label: 'Compare Properties', href: '/compare' },
     { label: 'Wishlist', href: '/wishlist' },
-    { label: 'My Dashboard', href: '/dashboard' },
+    { label: 'Admin Portal', href: '/admin' },
   ],
 };
 

@@ -409,4 +409,258 @@ export const updateUserRole = async (uid: string, role: 'Admin' | 'User') => {
   }
 };
 
+// Staff Management
+export interface StaffMember {
+  id: string;
+  employeeId: string;
+  name: string;
+  role: string;
+  department: string;
+  email: string;
+  phone: string;
+  status: 'Active' | 'On Leave' | 'Inactive';
+  employmentType: 'Full-time' | 'Part-time' | 'Contract';
+  joiningDate: string;
+  createdAt?: string;
+  timestampMillis?: number;
+}
+
+export const defaultSampleStaff: StaffMember[] = [
+  {
+    id: 'stf-1',
+    employeeId: 'HK-STF-001',
+    name: 'Harsh Kandhol',
+    role: 'Founder & CEO',
+    department: 'Executive Management',
+    email: 'mrharsh818206@gmail.com',
+    phone: '+91 98765 00000',
+    status: 'Active',
+    employmentType: 'Full-time',
+    joiningDate: '2022-01-15',
+    timestampMillis: new Date('2022-01-15').getTime(),
+  },
+  {
+    id: 'stf-2',
+    employeeId: 'HK-STF-002',
+    name: 'Rajesh Sharma',
+    role: 'Head of Sales & Acquisition',
+    department: 'Sales & Marketing',
+    email: 'rajesh.sharma@hkrealty.com',
+    phone: '+91 98234 56789',
+    status: 'Active',
+    employmentType: 'Full-time',
+    joiningDate: '2022-06-01',
+    timestampMillis: new Date('2022-06-01').getTime(),
+  },
+  {
+    id: 'stf-3',
+    employeeId: 'HK-STF-003',
+    name: 'Priya Patel',
+    role: 'Senior Property Consultant',
+    department: 'Property Management',
+    email: 'priya.patel@hkrealty.com',
+    phone: '+91 98111 22334',
+    status: 'Active',
+    employmentType: 'Full-time',
+    joiningDate: '2023-02-10',
+    timestampMillis: new Date('2023-02-10').getTime(),
+  },
+  {
+    id: 'stf-4',
+    employeeId: 'HK-STF-004',
+    name: 'Vikram Malhotra',
+    role: 'Lead Construction & Site Engineer',
+    department: 'Construction & Site',
+    email: 'vikram.m@hkrealty.com',
+    phone: '+91 98333 44556',
+    status: 'Active',
+    employmentType: 'Full-time',
+    joiningDate: '2023-08-20',
+    timestampMillis: new Date('2023-08-20').getTime(),
+  },
+  {
+    id: 'stf-5',
+    employeeId: 'HK-STF-005',
+    name: 'Ananya Desai',
+    role: 'Legal & Compliance Advisor',
+    department: 'Legal & Compliance',
+    email: 'ananya.desai@hkrealty.com',
+    phone: '+91 98444 55667',
+    status: 'Active',
+    employmentType: 'Contract',
+    joiningDate: '2023-11-05',
+    timestampMillis: new Date('2023-11-05').getTime(),
+  },
+  {
+    id: 'stf-6',
+    employeeId: 'HK-STF-006',
+    name: 'Amit Verma',
+    role: 'Customer Relationship Manager',
+    department: 'Operations',
+    email: 'amit.verma@hkrealty.com',
+    phone: '+91 98555 66778',
+    status: 'Active',
+    employmentType: 'Full-time',
+    joiningDate: '2024-03-12',
+    timestampMillis: new Date('2024-03-12').getTime(),
+  },
+];
+
+const LOCAL_STAFF_KEY = 'hk_realty_staff_members';
+
+export const getStaff = async (): Promise<StaffMember[]> => {
+  let dbStaff: StaffMember[] = [];
+  try {
+    const snap = await getDocs(collection(db, 'staff'));
+    dbStaff = snap.docs.map((d) => {
+      const data = d.data();
+      return {
+        id: d.id,
+        employeeId: data.employeeId || `HK-STF-${d.id.slice(0, 4)}`,
+        name: data.name || '',
+        role: data.role || 'Staff Member',
+        department: data.department || 'Operations',
+        email: data.email || '',
+        phone: data.phone || '',
+        status: (data.status || 'Active') as 'Active' | 'On Leave' | 'Inactive',
+        employmentType: (data.employmentType || 'Full-time') as 'Full-time' | 'Part-time' | 'Contract',
+        joiningDate: data.joiningDate || new Date().toISOString().split('T')[0],
+        createdAt: data.createdAt,
+        timestampMillis: data.timestampMillis || Date.now(),
+        ...data,
+      } as StaffMember;
+    });
+  } catch (err) {
+    console.error('Error fetching staff from Firestore:', err);
+  }
+
+  let localStaff: StaffMember[] = [];
+  if (typeof window !== 'undefined') {
+    try {
+      const stored = localStorage.getItem(LOCAL_STAFF_KEY);
+      if (stored) {
+        localStaff = JSON.parse(stored);
+      }
+    } catch (e) {}
+  }
+
+  // Combine default sample + local storage + firestore (avoiding duplicate ID / email)
+  const mapById = new Map<string, StaffMember>();
+  const mapByEmail = new Map<string, StaffMember>();
+
+  const processStaff = (stf: StaffMember) => {
+    const idKey = stf.id || stf.employeeId;
+    const emailKey = stf.email ? stf.email.toLowerCase().trim() : null;
+    const existing = (emailKey ? mapByEmail.get(emailKey) : null) || mapById.get(idKey);
+    const merged = { ...existing, ...stf };
+    if (idKey) mapById.set(idKey, merged);
+    if (emailKey) mapByEmail.set(emailKey, merged);
+  };
+
+  defaultSampleStaff.forEach(processStaff);
+  localStaff.forEach(processStaff);
+  dbStaff.forEach(processStaff);
+
+  const idValues = Array.from(mapById.values());
+  const emailValues = Array.from(mapByEmail.values());
+  const combined = idValues.concat(emailValues);
+
+  const finalStaff: StaffMember[] = [];
+  const seen = new Set<string>();
+  for (let i = 0; i < combined.length; i++) {
+    const s = combined[i];
+    const key = s.id || s.employeeId;
+    if (key && !seen.has(key)) {
+      seen.add(key);
+      finalStaff.push(s);
+    }
+  }
+
+  finalStaff.sort((a, b) => (b.timestampMillis || 0) - (a.timestampMillis || 0));
+  return finalStaff;
+};
+
+export const addStaff = async (
+  data: Omit<StaffMember, 'id' | 'employeeId'> & { employeeId?: string }
+): Promise<StaffMember> => {
+  const newId = `stf-${Date.now()}`;
+  const empNumber = Math.floor(100 + Math.random() * 900);
+  const employeeId = data.employeeId || `HK-STF-${empNumber}`;
+
+  const staffObj: StaffMember = {
+    id: newId,
+    employeeId,
+    name: data.name,
+    role: data.role,
+    department: data.department,
+    email: data.email.toLowerCase().trim(),
+    phone: data.phone,
+    status: data.status || 'Active',
+    employmentType: data.employmentType || 'Full-time',
+    joiningDate: data.joiningDate || new Date().toISOString().split('T')[0],
+    createdAt: new Date().toISOString(),
+    timestampMillis: Date.now(),
+  };
+
+  if (typeof window !== 'undefined') {
+    try {
+      const stored = localStorage.getItem(LOCAL_STAFF_KEY);
+      let list: StaffMember[] = stored ? JSON.parse(stored) : [...defaultSampleStaff];
+      list.unshift(staffObj);
+      localStorage.setItem(LOCAL_STAFF_KEY, JSON.stringify(list));
+    } catch (e) {}
+  }
+
+  try {
+    await setDoc(doc(db, 'staff', newId), {
+      ...staffObj,
+      createdAt: serverTimestamp(),
+    });
+  } catch (err) {
+    console.error('Error adding staff to Firestore:', err);
+  }
+
+  return staffObj;
+};
+
+export const updateStaff = async (id: string, data: Partial<StaffMember>): Promise<void> => {
+  if (typeof window !== 'undefined') {
+    try {
+      const stored = localStorage.getItem(LOCAL_STAFF_KEY);
+      let list: StaffMember[] = stored ? JSON.parse(stored) : [...defaultSampleStaff];
+      list = list.map((s) => (s.id === id ? { ...s, ...data } : s));
+      localStorage.setItem(LOCAL_STAFF_KEY, JSON.stringify(list));
+    } catch (e) {}
+  }
+
+  try {
+    await updateDoc(doc(db, 'staff', id), {
+      ...data,
+      updatedAt: serverTimestamp(),
+    });
+  } catch (err) {
+    console.error('Error updating staff in Firestore:', err);
+  }
+};
+
+export const deleteStaff = async (id: string): Promise<void> => {
+  if (typeof window !== 'undefined') {
+    try {
+      const stored = localStorage.getItem(LOCAL_STAFF_KEY);
+      if (stored) {
+        let list: StaffMember[] = JSON.parse(stored);
+        list = list.filter((s) => s.id !== id);
+        localStorage.setItem(LOCAL_STAFF_KEY, JSON.stringify(list));
+      }
+    } catch (e) {}
+  }
+
+  try {
+    await deleteDoc(doc(db, 'staff', id));
+  } catch (err) {
+    console.error('Error deleting staff from Firestore:', err);
+  }
+};
+
+
 

@@ -36,7 +36,7 @@ export default function SettingsPage() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       if (!u) {
-        router.replace('/auth/login');
+        router.replace('/admin/login');
       } else {
         setUser(u);
         setDisplayName(u.displayName || '');

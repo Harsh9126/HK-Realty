@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { isUserAdmin } from '@/lib/auth';
-import { getProperties, getProjects, getInquiries, getUsers } from '@/lib/firestore';
+import { getProperties, getProjects, getInquiries, getUsers, getStaff } from '@/lib/firestore';
 
 import MobileSectionNav from '@/components/MobileSectionNav';
 
@@ -15,6 +15,7 @@ const adminNavItems = [
   { href: '/admin/properties', label: 'Properties', icon: '🏘️' },
   { href: '/admin/projects', label: 'Projects', icon: '🏗️' },
   { href: '/admin/inquiries', label: 'Inquiries', icon: '📨' },
+  { href: '/admin/staff', label: 'Staff', icon: '👔' },
   { href: '/admin/users?tab=users', label: 'Users', icon: '👥' },
   { href: '/admin/users?tab=admins', label: 'Admins', icon: '🛡️' },
 ];
@@ -28,15 +29,16 @@ export default function AdminDashboardPage() {
     inquiries: 0,
     users: 0,
     admins: 0,
+    staff: 0,
   });
   const [loadingStats, setLoadingStats] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
-        window.location.href = '/auth/login';
+        window.location.href = '/admin/login';
       } else if (!isUserAdmin(user.email)) {
-        window.location.href = '/dashboard';
+        window.location.href = '/admin/login?error=unauthorized';
       } else {
         setAuthorized(true);
       }
@@ -48,11 +50,12 @@ export default function AdminDashboardPage() {
     if (authorized) {
       const loadStats = async () => {
         try {
-          const [props, projs, inqs, usrs] = await Promise.all([
+          const [props, projs, inqs, usrs, stf] = await Promise.all([
             getProperties(),
             getProjects(),
             getInquiries(),
             getUsers(),
+            getStaff(),
           ]);
           const regularUsers = usrs.filter((u: any) => u.role !== 'Admin');
           const adminUsers = usrs.filter((u: any) => u.role === 'Admin');
@@ -62,6 +65,7 @@ export default function AdminDashboardPage() {
             inquiries: inqs.length,
             users: regularUsers.length,
             admins: adminUsers.length,
+            staff: stf.length,
           });
         } catch (err) {
           console.error('Failed to load dashboard stats:', err);
@@ -101,6 +105,9 @@ export default function AdminDashboardPage() {
             <Link href="/admin/inquiries" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>
               📨 Inquiries
             </Link>
+            <Link href="/admin/staff" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>
+              👔 Staff ({stats.staff})
+            </Link>
             <Link href="/admin/users?tab=users" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>
               👥 Users ({stats.users})
             </Link>
@@ -116,7 +123,7 @@ export default function AdminDashboardPage() {
             <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.5rem, 4vw, 2.2rem)', color: 'var(--primary)', marginBottom: '8px' }}>
               Admin Dashboard
             </h1>
-            <p style={{ color: 'var(--text-light)', marginBottom: '32px' }}>Manage properties, inquiries, users, and admin accounts.</p>
+            <p style={{ color: 'var(--text-light)', marginBottom: '32px' }}>Manage properties, inquiries, staff team, and system administration.</p>
 
             {/* Stats */}
             <div className="grid-4" style={{ marginBottom: '40px' }}>
@@ -124,7 +131,7 @@ export default function AdminDashboardPage() {
                 { label: 'Total Properties', value: loadingStats ? '...' : stats.properties.toString(), icon: '🏘️' },
                 { label: 'Total Projects', value: loadingStats ? '...' : stats.projects.toString(), icon: '🏗️' },
                 { label: 'New Inquiries', value: loadingStats ? '...' : stats.inquiries.toString(), icon: '📨' },
-                { label: 'Registered Users', value: loadingStats ? '...' : stats.users.toString(), icon: '👥' },
+                { label: 'Staff Members', value: loadingStats ? '...' : stats.staff.toString(), icon: '👔' },
               ].map(stat => (
                 <div key={stat.label} className="card" style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '16px', borderLeft: '4px solid var(--secondary)' }}>
                   <div style={{ fontSize: '2rem' }}>
@@ -150,6 +157,15 @@ export default function AdminDashboardPage() {
                 </div>
               </Link>
 
+              <Link href="/admin/staff" className="card" style={{ padding: '28px', textDecoration: 'none', display: 'flex', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
+                <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: 'linear-gradient(135deg, #4F46E5 0%, #3730A3 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', color: '#fff', flexShrink: 0 }}>👔</div>
+                <div style={{ flex: 1, minWidth: '200px' }}>
+                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--primary)', marginBottom: '8px' }}>Staff Management</h3>
+                  <p style={{ color: 'var(--text-light)', fontSize: '0.85rem', marginBottom: '14px' }}>Manage team members, roles, departments, contact info, and status.</p>
+                  <span style={{ color: '#4F46E5', fontWeight: '600', fontSize: '0.85rem' }}>Manage Staff ({stats.staff}) →</span>
+                </div>
+              </Link>
+
               <Link href="/admin/inquiries" className="card" style={{ padding: '28px', textDecoration: 'none', display: 'flex', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
                 <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', color: '#fff', flexShrink: 0 }}>📨</div>
                 <div style={{ flex: 1, minWidth: '200px' }}>
@@ -169,10 +185,10 @@ export default function AdminDashboardPage() {
               </Link>
 
               <Link href="/admin/users?tab=users" className="card" style={{ padding: '28px', textDecoration: 'none', display: 'flex', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
-                <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', color: '#fff', flexShrink: 0 }}>👥</div>
+                <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem', color: '#fff', flexShrink: 0 }}>🛡️</div>
                 <div style={{ flex: 1, minWidth: '200px' }}>
-                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--primary)', marginBottom: '8px' }}>Users & Admins</h3>
-                  <p style={{ color: 'var(--text-light)', fontSize: '0.85rem', marginBottom: '14px' }}>Manage registered user accounts and create new admin accounts.</p>
+                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--primary)', marginBottom: '8px' }}>Admins & Accounts</h3>
+                  <p style={{ color: 'var(--text-light)', fontSize: '0.85rem', marginBottom: '14px' }}>Manage administrator permissions and system access accounts.</p>
                   <span style={{ color: '#3B82F6', fontWeight: '600', fontSize: '0.85rem' }}>Manage Accounts →</span>
                 </div>
               </Link>

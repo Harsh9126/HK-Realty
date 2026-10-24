@@ -13,6 +13,7 @@ const adminNavItems = [
   { href: '/admin/properties', label: 'Properties', icon: '🏘️' },
   { href: '/admin/projects', label: 'Projects', icon: '🏗️' },
   { href: '/admin/inquiries', label: 'Inquiries', icon: '📨' },
+  { href: '/admin/staff', label: 'Staff', icon: '👔' },
   { href: '/admin/users?tab=users', label: 'Users', icon: '👥' },
   { href: '/admin/users?tab=admins', label: 'Admins', icon: '🛡️' },
 ];
@@ -146,6 +147,7 @@ function AdminUsersContent() {
             <Link href="/admin/properties" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>🏘️ Properties</Link>
             <Link href="/admin/projects" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>🏗️ Projects</Link>
             <Link href="/admin/inquiries" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>📨 Inquiries</Link>
+            <Link href="/admin/staff" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>👔 Staff</Link>
             <button 
               onClick={() => setActiveTab('users')}
               style={{ 

@@ -28,6 +28,11 @@ export default function Navbar() {
   const isHome = pathname === '/';
   const isAdmin = pathname.startsWith('/admin');
 
+  // Hide navbar on admin login page
+  if (pathname === '/admin/login') {
+    return null;
+  }
+
   // Minimal navbar for admin pages
   if (isAdmin) {
     return (
@@ -272,7 +277,6 @@ function NavAuthButtons() {
   if (loading) return null;
 
   if (user) {
-    const initials = (user.displayName || user.email || 'U').charAt(0).toUpperCase();
     return (
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
         {adminStatus && (
@@ -289,25 +293,9 @@ function NavAuthButtons() {
               letterSpacing: '0.03em',
             }}
           >
-            ⚙️ Admin
+            ⚙️ Admin Panel
           </Link>
         )}
-        <Link
-          href="/dashboard"
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}
-        >
-          <div style={{
-            width: '34px', height: '34px', borderRadius: '50%',
-            background: 'var(--gradient-gold)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontWeight: '700', fontSize: '0.9rem', color: 'var(--primary)',
-          }}>
-            {initials}
-          </div>
-          <span style={{ color: 'rgba(255,255,255,0.9)', fontSize: '0.9rem', fontWeight: '500' }}>
-            {user.displayName?.split(' ')[0] || 'Account'}
-          </span>
-        </Link>
         <button
           onClick={handleLogout}
           className="btn btn-ghost btn-sm"
@@ -319,22 +307,29 @@ function NavAuthButtons() {
     );
   }
 
-  return (
-    <Link href="/auth/login" className="btn btn-ghost btn-sm">
-      Login
-    </Link>
-  );
+  // Remove login button for general public users
+  return null;
 }
 
 // Mobile auth buttons
 function NavAuthButtonsMobile({ onClose }: { onClose: () => void }) {
   const [user, setUser] = useState<any>(null);
+  const [isAdminUser, setIsAdminUser] = useState(false);
 
   useEffect(() => {
     let unsubscribe: () => void;
     import('firebase/auth').then(({ onAuthStateChanged }) => {
       import('@/lib/firebase').then(({ auth }) => {
-        unsubscribe = onAuthStateChanged(auth, (u) => setUser(u));
+        unsubscribe = onAuthStateChanged(auth, (u) => {
+          setUser(u);
+          if (u?.email) {
+            import('@/lib/auth').then(({ isUserAdmin }) => {
+              setIsAdminUser(isUserAdmin(u.email));
+            });
+          } else {
+            setIsAdminUser(false);
+          }
+        });
       });
     });
     return () => { if (unsubscribe) unsubscribe(); };
@@ -350,19 +345,28 @@ function NavAuthButtonsMobile({ onClose }: { onClose: () => void }) {
 
   if (user) {
     return (
-      <button
-        onClick={handleLogout}
-        className="btn btn-outline btn-sm"
-        style={{ flex: 1, justifyContent: 'center' }}
-      >
-        Logout
-      </button>
+      <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+        {isAdminUser && (
+          <Link
+            href="/admin"
+            className="btn btn-primary btn-sm"
+            style={{ flex: 1, justifyContent: 'center', textDecoration: 'none' }}
+            onClick={onClose}
+          >
+            ⚙️ Admin
+          </Link>
+        )}
+        <button
+          onClick={handleLogout}
+          className="btn btn-outline btn-sm"
+          style={{ flex: 1, justifyContent: 'center' }}
+        >
+          Logout
+        </button>
+      </div>
     );
   }
 
-  return (
-    <Link href="/auth/login" className="btn btn-outline btn-sm" style={{ flex: 1, justifyContent: 'center' }} onClick={onClose}>
-      Login
-    </Link>
-  );
+  // Remove login button for general public users
+  return null;
 }

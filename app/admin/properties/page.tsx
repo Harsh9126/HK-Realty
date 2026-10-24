@@ -11,6 +11,7 @@ const adminNavItems = [
   { href: '/admin/properties', label: 'Properties', icon: '🏘️' },
   { href: '/admin/projects', label: 'Projects', icon: '🏗️' },
   { href: '/admin/inquiries', label: 'Inquiries', icon: '📨' },
+  { href: '/admin/staff', label: 'Staff', icon: '👔' },
   { href: '/admin/users?tab=users', label: 'Users', icon: '👥' },
   { href: '/admin/users?tab=admins', label: 'Admins', icon: '🛡️' },
 ];
@@ -170,6 +171,7 @@ export default function AdminPropertiesPage() {
             <Link href="/admin/properties" style={{ padding: '12px 16px', background: 'rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px', fontWeight: '600' }}>🏘️ Properties</Link>
             <Link href="/admin/projects" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>🏗️ Projects</Link>
             <Link href="/admin/inquiries" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>📨 Inquiries</Link>
+            <Link href="/admin/staff" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>👔 Staff</Link>
             <Link href="/admin/users?tab=users" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>👥 Users</Link>
             <Link href="/admin/users?tab=admins" style={{ padding: '12px 16px', color: 'rgba(255,255,255,0.7)', borderRadius: '8px', transition: 'all 0.2s' }}>🛡️ Admins</Link>
           </nav>

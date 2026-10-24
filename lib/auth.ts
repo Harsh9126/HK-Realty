@@ -27,6 +27,12 @@ export const isUserAdmin = (email?: string | null): boolean => {
         const match = users.find((u: any) => u.email?.toLowerCase().trim() === cleanEmail);
         if (match && match.role === 'Admin') return true;
       }
+      const staffStored = localStorage.getItem('hk_realty_staff_members');
+      if (staffStored) {
+        const staff = JSON.parse(staffStored);
+        const match = staff.find((s: any) => s.email?.toLowerCase().trim() === cleanEmail);
+        if (match && (match.role?.toLowerCase().includes('admin') || match.department === 'Executive Management')) return true;
+      }
     } catch (e) {}
   }
   return false;

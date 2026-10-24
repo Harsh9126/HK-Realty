@@ -22,7 +22,7 @@ export default function InquiriesPage() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       if (!u) {
-        router.replace('/auth/login');
+        router.replace('/admin/login');
       } else {
         setUser(u);
         setLoading(false);
